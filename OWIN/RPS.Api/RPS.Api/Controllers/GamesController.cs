@@ -1,18 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Newtonsoft.Json.Linq;
 using RPS.Api.Extensions;
-using Treefort.Application;
 using Treefort.Commanding;
 using Treefort.Common;
-using Treefort.Infrastructure;
 
 namespace RPS.Api.Controllers
 {
@@ -33,7 +27,7 @@ namespace RPS.Api.Controllers
             var cmd = new CommandAdapter<Game.CreateGameCommand>
                 (new RPS.Game.CreateGameCommand(input.Value<string>("playerName"), input.ToMove(), input.Value<string>("gameName"), gameId.ToString()))
             ;
-            await _commandBus.SendAsync(cmd); //Not fire and forget
+            await _commandBus.SendAsync(cmd); //Not fire and forget 
             return Request.CreateResponse(HttpStatusCode.Accepted)
                 .Tap(message => message.Headers.Location = new Uri(Url.Link("DefaultApi", new { id = gameId })));
         }
@@ -45,9 +39,10 @@ namespace RPS.Api.Controllers
             return Request.CreateResponse(HttpStatusCode.Accepted).Tap(
                     r => r.Headers.Location = new Uri(Url.Link("DefaultApi", new { id })));
         }
-
+        
         public HttpResponseMessage Get()
         {
+            //TODO no projections/views
             return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent("Hello") };
         }
     }
