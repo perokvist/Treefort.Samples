@@ -26,18 +26,19 @@ namespace RPS.Api
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
-
-            var commandDispatcher = new Dispatcher<object, Task>();
-            commandDispatcher.Register<Game.CreateGameCommand>(command => Task.Run(() => GameHandler.handle(command)));
-
+            
             config.Formatters.Remove(config.Formatters.XmlFormatter);
 
             //Azure config
             //var bus = GetAzureCommandBus();
             
             //Local config
+            var commandDispatcher = new Dispatcher<object, Task>();
+            commandDispatcher.Register<Game.CreateGameCommand>(command => Task.Run(() => GameHandler.handle(command)));
             var bus = new ApplicationServer(commandDispatcher.Dispatch, new ConsoleLogger()); 
 
+
+            //Register CommandBus
             config.DependencyResolver = new ServiceResolver(
                 new StaticScope()
                 .Add<ICommandBus>(bus)
