@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RPS.Processor", "RPS.Proces
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RPS.Processor.WebJobsHost", "RPS.Processor.WebJobsHost\RPS.Processor.WebJobsHost.csproj", "{FB1CD0A0-BC2A-427C-A123-9A63094B30AC}"
 EndProject
+Project("{CC5FD16D-436D-48AD-A40C-5A424C6E3E79}") = "RPS.Processor.Worker", "RPS.Processor.Worker\RPS.Processor.Worker.ccproj", "{84A45D4A-83E8-4C86-97AC-538CEC6353EF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RPS.Processor.Role", "RPS.Processor.Role\RPS.Processor.Role.csproj", "{82F5517E-E826-4C32-A438-DE0186E5D3B3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{FB1CD0A0-BC2A-427C-A123-9A63094B30AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FB1CD0A0-BC2A-427C-A123-9A63094B30AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FB1CD0A0-BC2A-427C-A123-9A63094B30AC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84A45D4A-83E8-4C86-97AC-538CEC6353EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84A45D4A-83E8-4C86-97AC-538CEC6353EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84A45D4A-83E8-4C86-97AC-538CEC6353EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84A45D4A-83E8-4C86-97AC-538CEC6353EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{82F5517E-E826-4C32-A438-DE0186E5D3B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82F5517E-E826-4C32-A438-DE0186E5D3B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82F5517E-E826-4C32-A438-DE0186E5D3B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82F5517E-E826-4C32-A438-DE0186E5D3B3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

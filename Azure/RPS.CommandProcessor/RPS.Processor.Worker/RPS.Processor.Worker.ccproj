@@ -36,6 +36,24 @@
     <ServiceConfiguration Include="ServiceConfiguration.Local.cscfg" />
     <ServiceConfiguration Include="ServiceConfiguration.Cloud.cscfg" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RPS.Processor.Role\RPS.Processor.Role.csproj">
+      <Name>RPS.Processor.Role</Name>
+      <Project>{82f5517e-e826-4c32-a438-de0186e5d3b3}</Project>
+      <Private>True</Private>
+      <RoleType>Worker</RoleType>
+      <RoleName>RPS.Processor.Role</RoleName>
+      <UpdateDiagnosticsConnectionStringOnPublish>True</UpdateDiagnosticsConnectionStringOnPublish>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="RPS.Processor.RoleContent\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="RPS.Processor.RoleContent\diagnostics.wadcfg">
+      <SubType>Content</SubType>
+    </Content>
+  </ItemGroup>
   <!-- Import the target files for this project template -->
   <PropertyGroup>
     <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">10.0</VisualStudioVersion>
