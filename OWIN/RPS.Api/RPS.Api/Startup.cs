@@ -1,10 +1,13 @@
-﻿using System;
+﻿using System.Configuration;
 using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Http.ModelBinding.Binders;
 using Microsoft.Owin;
+using Microsoft.ServiceBus;
 using Owin;
 using Treefort.Application;
+using Treefort.Azure.Commanding;
+using Treefort.Azure.Infrastructure;
+using Treefort.Azure.Messaging;
 using Treefort.Infrastructure;
 using Treefort.Commanding;
 
@@ -28,9 +31,16 @@ namespace RPS.Api
             commandDispatcher.Register<Game.CreateGameCommand>(command => Task.Run(() => GameHandler.handle(command)));
 
             config.Formatters.Remove(config.Formatters.XmlFormatter);
+
+            //Azure config
+            //var bus = GetAzureCommandBus();
+            
+            //Local config
+            var bus = new ApplicationServer(commandDispatcher.Dispatch, new ConsoleLogger()); 
+
             config.DependencyResolver = new ServiceResolver(
                 new StaticScope()
-                .Add(new ApplicationServer(commandDispatcher.Dispatch, new ConsoleLogger()))
+                .Add<ICommandBus>(bus)
                 );
 
             app.UseWebApi(config);
@@ -41,22 +51,15 @@ namespace RPS.Api
                 return context.Response.WriteAsync("Hello, world.");
             });
         }
-    }
 
-    public class CommandAdapter<T> :  ICommand
-    {
-        public CommandAdapter(T innerCommand)
+        private static ICommandBus GetAzureCommandBus()
         {
-            
-        }
-        public System.Guid AggregateId
-        {
-            get { throw new System.NotImplementedException(); }
-        }
-
-        public System.Guid CorrelationId
-        {
-            get { throw new System.NotImplementedException(); }
+            var connectionString = ConfigurationManager.AppSettings["Microsoft.ServiceBus.ConnectionString"];
+            var manager = NamespaceManager.CreateFromConnectionString(connectionString);
+            const string path = "commands";
+            if (!manager.QueueExists(path))
+                manager.CreateQueue(path);
+            return new CommandBus(new QueueSender(connectionString, path), new JsonTextSerializer());
         }
     }
 }
