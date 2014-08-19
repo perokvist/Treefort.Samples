@@ -41,7 +41,7 @@ namespace Treefort.AzureProcessor
 
         private static IProcessor SessionCommandProcessor(string connectionString, string path, Dispatcher<ICommand, Task> dispatcher)
         {
-            var processor = new CommandProcessor(new SessionQueueReceiver(connectionString, path),
+            var processor = new CommandProcessor(new SessionQueueReceiver(connectionString, path, Console.WriteLine),
                 new CommandDispatcherAction(dispatcher.Dispatch), new JsonTextSerializer());
             return processor;
         }
