@@ -20,12 +20,29 @@ namespace Treefort.AzureClient
             if(!manager.QueueExists(path))
                 manager.CreateQueue(path);
             var bus = new CommandBus(new QueueSender(connectionString, path), new JsonTextSerializer());
-            for (var i = 0; i < 3; i++)
+          
+            //SendMessages(bus, 3);
+            SendSessionMessages(bus, 3);
+
+            Console.ReadLine();
+        }
+
+        private static void SendSessionMessages(CommandBus bus, int count)
+        {
+            for (var i = 0; i < count; i++)
+            {
+                Console.WriteLine("Sending session command {0}", i + 1);
+                bus.SendAsync(new SampleSessionCommand()).Wait();
+            }
+        }
+
+        private static void SendMessages(CommandBus bus, int count)
+        {
+            for (var i = 0; i < count; i++)
             {
                 Console.WriteLine("Sending command {0}", i + 1);
                 bus.SendAsync(new SampleCommand()).Wait();
             }
-            Console.ReadLine();
         }
     }
 }
