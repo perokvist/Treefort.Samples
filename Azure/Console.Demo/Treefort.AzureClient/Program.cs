@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Security.Cryptography;
 using Microsoft.ServiceBus;
@@ -25,20 +26,22 @@ namespace Treefort.AzureClient
             var bus = new CommandBus(new QueueSender(connectionString, path), new JsonTextSerializer());
           
             //SendMessages(bus, 3);
-            SendSessionMessages(bus, 3);
-            SendSessionMessages(bus, 3);
-            SendSessionMessages(bus, 3);
+            var sessions = new List<Guid>() {Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid()};
 
+            sessions.ForEach(guid => SendSessionMessages(bus, 3, guid));
+            Console.WriteLine("Sent 3x3 press any key to send more...");
+            Console.ReadLine();
+            sessions.ForEach(guid => SendSessionMessages(bus, 3, guid));
+            Console.WriteLine("Sent 3x3 more... press any key to quit");
             Console.ReadLine();
         }
 
-        private static void SendSessionMessages(CommandBus bus, int count)
+        private static void SendSessionMessages(CommandBus bus, int count, Guid session)
         {
-            var sessionId = Guid.NewGuid();
             for (var i = 0; i < count; i++)
             {
                 Console.WriteLine("Sending session command {0}", i + 1);
-                var cmd = new SampleSessionCommand(sessionId);
+                var cmd = new SampleSessionCommand(session);
                 cmd.CastAction<ISessionMessage>(x => Console.WriteLine("Session cmd {0}", x.SessionId));
                 bus.SendAsync(cmd).Wait();
             }
