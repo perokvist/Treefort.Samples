@@ -7,6 +7,7 @@ using Newtonsoft.Json.Linq;
 using RPS.Api.Extensions;
 using Treefort.Commanding;
 using Treefort.Common;
+using Treefort.Messaging;
 
 namespace RPS.Api.Controllers
 {
@@ -20,14 +21,12 @@ namespace RPS.Api.Controllers
         }
 
         [HttpPost, ActionName("create")]
-        public async Task<HttpResponseMessage> CreateGameAsync(JObject input)
+        public HttpResponseMessage CreateGame(JObject input)
         {
             //TODO remove xml support
             var gameId = Guid.NewGuid();
-            var cmd = new CommandAdapter<Game.CreateGameCommand>
-                (new RPS.Game.CreateGameCommand(input.Value<string>("playerName"), input.ToMove(), input.Value<string>("gameName"), gameId.ToString()))
-            ;
-            await _commandBus.SendAsync(cmd); //Not fire and forget 
+            var cmd = new RPS.Commands.CreateGameCommand(input.Value<string>("playerName"), input.ToMove(), input.Value<string>("gameName"), gameId, Guid.NewGuid());
+            _commandBus.SendAsync(cmd); //Note fire and forget with app server 
             return Request.CreateResponse(HttpStatusCode.Accepted)
                 .Tap(message => message.Headers.Location = new Uri(Url.Link("DefaultApi", new { id = gameId })));
         }
@@ -40,10 +39,12 @@ namespace RPS.Api.Controllers
                     r => r.Headers.Location = new Uri(Url.Link("DefaultApi", new { id })));
         }
         
-        public HttpResponseMessage Get()
+        public string Get()
         {
+            
+            return "bu";
             //TODO no projections/views
-            return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent("Hello") };
+            //return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent("Hello") };
         }
     }
 }

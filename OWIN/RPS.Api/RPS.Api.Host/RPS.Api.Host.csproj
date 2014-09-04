@@ -40,8 +40,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.Owin.Host.HttpListener">
-      <HintPath>..\packages\Microsoft.Owin.Host.HttpListener.3.0.0-beta1\lib\net45\Microsoft.Owin.Host.HttpListener.dll</HintPath>
+    <Reference Include="Microsoft.Owin.Host.HttpListener, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Owin.Host.HttpListener.3.0.0\lib\net45\Microsoft.Owin.Host.HttpListener.dll</HintPath>
     </Reference>
     <Reference Include="System" />
   </ItemGroup>
@@ -88,7 +89,7 @@
           </CustomServerUrl>
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
           <servers defaultServer="OwinHost">
-            <server name="OwinHost" exePath="{solutiondir}\packages\OwinHost.3.0.0-beta1\tools\OwinHost.exe" cmdArgs="-u {url}" url="http://localhost:12345/" workingDir="{projectdir}" />
+            <server name="OwinHost" exePath="{solutiondir}\packages\OwinHost.3.0.0\tools\OwinHost.exe" cmdArgs="-u {url}" url="http://localhost:12345/" workingDir="{projectdir}" />
           </servers>
         </WebProjectProperties>
       </FlavorProperties>

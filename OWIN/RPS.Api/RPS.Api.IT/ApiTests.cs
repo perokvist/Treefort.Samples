@@ -1,7 +1,9 @@
-﻿using Microsoft.Owin.Hosting;
+﻿using System.Net;
+using Microsoft.Owin.Hosting;
 using System;
 using System.Net.Http;
 using Xunit;
+using System.Diagnostics;
 
 namespace RPS.Api.IT
 {
@@ -12,6 +14,7 @@ namespace RPS.Api.IT
 
         public ApiTests()
         {
+            Trace.Listeners.Add(new ConsoleTraceListener());
             _baseAddress = "http://localhost:9000/";
             _host = WebApp.Start<RPS.Api.Startup>(url: _baseAddress);
         }
@@ -21,8 +24,8 @@ namespace RPS.Api.IT
         {
             var client = new HttpClient();
             var response = await client.GetAsync(_baseAddress + "api/Games");
-
-
+            var s = await response.Content.ReadAsStringAsync();
+            Assert.Equal("bu", s);
         }
 
         public void Dispose()

@@ -4,18 +4,18 @@ namespace RPS.Api.Extensions
 {
     public static class InputExtensions
     {
-        public static Game.Move ToMove(this JObject self)
+        public static Common.Move ToMove(this JObject self)
         {
             switch (self.Value<string>("move").ToLower())
             {
                 case "paper":
-                    return Game.Move.Paper;
+                    return Common.Move.Paper;
                 case "rock":
-                    return Game.Move.Rock;
+                    return Common.Move.Rock;
                 case "scissors":
-                    return Game.Move.Scissors;
+                    return Common.Move.Scissors;
                 default :
-                    return Game.Move.Paper;
+                    return Common.Move.Paper;
             }
 
         }

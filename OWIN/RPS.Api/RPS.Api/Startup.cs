@@ -4,10 +4,12 @@ using System.Web.Http;
 using Microsoft.Owin;
 using Microsoft.ServiceBus;
 using Owin;
+using RPS.Api.Controllers;
 using Treefort.Application;
 using Treefort.Azure.Commanding;
 using Treefort.Azure.Infrastructure;
 using Treefort.Azure.Messaging;
+using Treefort.Events;
 using Treefort.Infrastructure;
 using Treefort.Commanding;
 
@@ -31,17 +33,19 @@ namespace RPS.Api
 
             //Azure config
             //var bus = GetAzureCommandBus();
-            
+
             //Local config
-            var commandDispatcher = new Dispatcher<object, Task>();
-            commandDispatcher.Register<Game.CreateGameCommand>(command => Task.Run(() => GameHandler.handle(command)));
+            var commandDispatcher = new Dispatcher<ICommand, Task>();
+
+            commandDispatcher.Register<ICommand>(command =>
+                Task.Run(() => RPS.GameHandler.handle(command)));
+            
             var bus = new ApplicationServer(commandDispatcher.Dispatch, new ConsoleLogger()); 
-
-
+           
             //Register CommandBus
             config.DependencyResolver = new ServiceResolver(
                 new StaticScope()
-                .Add<ICommandBus>(bus)
+                .Add(new GamesController(bus))
                 );
 
             app.UseWebApi(config);
