@@ -1,10 +1,13 @@
-﻿using System.Configuration;
+﻿using System;
+using System.Collections.Generic;
+using System.Configuration;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.Owin;
 using Microsoft.ServiceBus;
 using Owin;
 using RPS.Api.Controllers;
+using RPS.Game.Domain;
 using Treefort.Application;
 using Treefort.Azure.Commanding;
 using Treefort.Azure.Infrastructure;
@@ -37,15 +40,22 @@ namespace RPS.Api
             //Local config
             var commandDispatcher = new Dispatcher<ICommand, Task>();
 
-            commandDispatcher.Register<ICommand>(command =>
-                Task.Run(() => RPS.GameHandler.handle(command)));
+            var games = new AwailibleGames();
+            var eventPublisher = new EventPublisher(new List<IEventListener> { new ProjectionsListener(games)}, Console.WriteLine);
+            var eventStore = new PublishingEventStore(new InMemoryEventStore(() => new InMemoryEventStream()), eventPublisher);   
+
+            //TODO - IState is not needed ? in DB scenario maybe - but not to be forced on ApplicationService
+            //TODO how to use aggregate marker interface, dynamic cast on handle ex
+            commandDispatcher.Register<CreateGameCommand>(
+                command => ApplicationService.UpdateAsync<Game.Domain.Game, GameState>(
+                    state => new Game.Domain.Game(state), eventStore, command, game => game.Handle(command)));
             
             var bus = new ApplicationServer(commandDispatcher.Dispatch, new ConsoleLogger()); 
            
             //Register CommandBus
             config.DependencyResolver = new ServiceResolver(
                 new StaticScope()
-                .Add(new GamesController(bus))
+                .Add(new GamesController(bus, games))
                 );
 
             app.UseWebApi(config);

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -8,16 +10,19 @@ using RPS.Api.Extensions;
 using Treefort.Commanding;
 using Treefort.Common;
 using Treefort.Messaging;
+using RPS.Game.Domain;
 
 namespace RPS.Api.Controllers
 {
     public class GamesController : ApiController
     {
         private readonly ICommandBus _commandBus;
+        private readonly AwailibleGames _awailibleGames;
 
-        public GamesController(ICommandBus commandBus)
+        public GamesController(ICommandBus commandBus, AwailibleGames awailibleGames)
         {
             _commandBus = commandBus;
+            _awailibleGames = awailibleGames;
         }
 
         [HttpPost, ActionName("create")]
@@ -25,8 +30,8 @@ namespace RPS.Api.Controllers
         {
             //TODO remove xml support
             var gameId = Guid.NewGuid();
-            var cmd = new RPS.Commands.CreateGameCommand(input.Value<string>("playerName"), input.ToMove(), input.Value<string>("gameName"), gameId, Guid.NewGuid());
-            _commandBus.SendAsync(cmd); //Note fire and forget with app server 
+            var cmd = new CreateGameCommand(gameId, input.Value<string>("playerName"), input.Value<string>("gameName"), input.ToMove());
+            _commandBus.SendAsync(cmd); //Note - fire and forget with app server 
             return Request.CreateResponse(HttpStatusCode.Accepted)
                 .Tap(message => message.Headers.Location = new Uri(Url.Link("DefaultApi", new { id = gameId })));
         }
@@ -39,12 +44,9 @@ namespace RPS.Api.Controllers
                     r => r.Headers.Location = new Uri(Url.Link("DefaultApi", new { id })));
         }
         
-        public string Get()
+        public IEnumerable<string> Get()
         {
-            
-            return "bu";
-            //TODO no projections/views
-            //return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent("Hello") };
+            return _awailibleGames.Games.Select(x => x.Value);
         }
     }
 }

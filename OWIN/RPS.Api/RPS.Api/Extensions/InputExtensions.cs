@@ -1,21 +1,22 @@
 ﻿using Newtonsoft.Json.Linq;
+using RPS.Game.Domain;
 
 namespace RPS.Api.Extensions
 {
     public static class InputExtensions
     {
-        public static Common.Move ToMove(this JObject self)
+        public static Move ToMove(this JObject self)
         {
             switch (self.Value<string>("move").ToLower())
             {
                 case "paper":
-                    return Common.Move.Paper;
+                    return Move.Paper;
                 case "rock":
-                    return Common.Move.Rock;
+                    return Move.Rock;
                 case "scissors":
-                    return Common.Move.Scissors;
+                    return Move.Scissors;
                 default :
-                    return Common.Move.Paper;
+                    return Move.Paper;
             }
 
         }
