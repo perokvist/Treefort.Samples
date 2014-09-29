@@ -2,15 +2,14 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using RPS.Game.Domain;
-using Treefort.Common;
 using Treefort.Events;
 using Treefort.Read;
 
 namespace RPS.Api
 {
-    public class AwailableGames : IgnoreNonApplicableEventsAsync, IProjection
+    public class AllGames : IgnoreNonApplicableEventsAsync, IProjection
     {
-        public AwailableGames()
+        public AllGames()
         {
             Games = new Dictionary<Guid, string>();
         }
@@ -28,11 +27,5 @@ namespace RPS.Api
             return Task.FromResult(new object());
         }
 
-        public Task HandleAsync(GameEndedEvent @event)
-        {
-            if (Games.ContainsKey(@event.GameId))
-                Games.Remove(@event.GameId);
-            return Task.FromResult(new object());
-        }
     }
 }

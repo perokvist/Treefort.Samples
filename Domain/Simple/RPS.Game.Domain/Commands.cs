@@ -4,7 +4,11 @@ using Treefort.Commanding;
 
 namespace RPS.Game.Domain
 {
-    public class CreateGameCommand : ICommand
+
+    public interface IGameCommand : ICommand
+    {}
+
+    public class CreateGameCommand : IGameCommand
     {
         
         public CreateGameCommand(Guid gameId, string playerName, string gameName, Move firstMove)
@@ -27,7 +31,7 @@ namespace RPS.Game.Domain
         public Guid CorrelationId { get; private set; }
     }
 
-    public class MakeMoveCommand : ICommand
+    public class MakeMoveCommand : IGameCommand
     {
         
         public MakeMoveCommand(Guid gameId, Move move, string playerName)

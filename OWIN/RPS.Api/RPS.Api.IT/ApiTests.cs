@@ -1,4 +1,7 @@
-﻿using System.Net;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using Microsoft.Owin.Hosting;
 using System;
 using System.Net.Http;
@@ -24,8 +27,8 @@ namespace RPS.Api.IT
         {
             var client = new HttpClient();
             var response = await client.GetAsync(_baseAddress + "api/Games");
-            var s = await response.Content.ReadAsStringAsync();
-            Assert.Equal("bu", s);
+            var games = await response.Content.ReadAsAsync<List<string>>();
+            Assert.Empty(games);
         }
 
         public void Dispose()

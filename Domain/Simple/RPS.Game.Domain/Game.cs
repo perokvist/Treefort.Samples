@@ -35,6 +35,11 @@ namespace RPS.Game.Domain
         {
             return _state.CreatorName != playerName;
         }
+        
+        public IEnumerable<IEvent> Handle(IGameCommand command)
+        {
+            return this.Handle((dynamic) command);
+        } 
 
         public IEnumerable<IEvent> Handle(CreateGameCommand command)
         {
