@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using RPS.Game.Domain;
 using Treefort.Common;
@@ -10,12 +11,17 @@ namespace RPS.Api
 {
     public class AwailableGames : IgnoreNonApplicableEventsAsync, IProjection
     {
+        private readonly Dictionary<Guid, Game> _games;
+
         public AwailableGames()
         {
-            Games = new Dictionary<Guid, string>();
+            _games = new Dictionary<Guid, Game>();
         }
 
-        public Dictionary<Guid, string> Games { get; set; }
+        public IEnumerable<Game> GetGames()
+        {
+            return _games.Select(x => x.Value).ToList();
+        }
 
         public Task WhenAsync(IEvent @event)
         {
@@ -24,14 +30,14 @@ namespace RPS.Api
 
         public Task HandleAsync(GameCreatedEvent @event)
         {
-            Games.Add(@event.GameId, @event.GameName);
+            _games.Add(@event.GameId, new Game {GameId = @event.GameId, Name = @event.GameName});
             return Task.FromResult(new object());
         }
 
         public Task HandleAsync(GameEndedEvent @event)
         {
-            if (Games.ContainsKey(@event.GameId))
-                Games.Remove(@event.GameId);
+            if (_games.ContainsKey(@event.GameId))
+                _games.Remove(@event.GameId);
             return Task.FromResult(new object());
         }
     }

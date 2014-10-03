@@ -23,12 +23,28 @@ namespace RPS.Api.IT
         }
 
         [Fact]
-        public async void Test()
+        public async void GamesReturnsProjection()
         {
             var client = new HttpClient();
-            var response = await client.GetAsync(_baseAddress + "api/Games");
-            var games = await response.Content.ReadAsAsync<List<string>>();
+            var response = await client.GetAsync(_baseAddress + "api/Games/awailable");
+            var games = await response.Content.ReadAsAsync<List<Game>>();
             Assert.Empty(games);
+        }
+
+        [Fact]
+        public async void CreateGameReturnAccepted()
+        {
+            var client = new HttpClient();
+            var response = await client.PostAsJsonAsync(_baseAddress + "api/Games/", new { playerName ="per", gameName = "testGame", move = "paper"});
+            Assert.Equal(HttpStatusCode.Accepted, response.StatusCode);
+        }
+
+        [Fact]
+        public async void MakeMoveReturnsAccepted()
+        {
+            var client = new HttpClient();
+            var response = await client.PutAsJsonAsync(_baseAddress + "api/Games/awailable/" + Guid.NewGuid().ToString(), new { playerName = "per2", move = "paper" });
+            Assert.Equal(HttpStatusCode.Accepted, response.StatusCode); 
         }
 
         public void Dispose()

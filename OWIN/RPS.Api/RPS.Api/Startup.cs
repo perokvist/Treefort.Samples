@@ -7,8 +7,11 @@ using System.Web.Http;
 using Autofac;
 using Autofac.Integration.WebApi;
 using Microsoft.Owin;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Owin;
 using RPS.Api.Controllers;
+using RPS.Api.PublicDomain;
 using RPS.Game.Domain;
 using Treefort.Application;
 using Treefort.Events;
@@ -20,40 +23,44 @@ using Treefort.Read;
 
 namespace RPS.Api
 {
+    public static class RouteConfiguration
+    {
+        public const string GamesRoute = "Games";
+        public const string AwailableGamesRoute = "Awailable";
+        public const string EndedGamesRoute = "Ended";
+
+    }
     public class Startup
     {
         public void Configuration(IAppBuilder app)
         {
 
             var config = new HttpConfiguration();
-            config.Routes.MapHttpRoute(
-                name: "API Default",
-                routeTemplate: "api/{controller}/{id}",
-                defaults: new { id = RouteParameter.Optional }
-            );
+            config.MapHttpAttributeRoutes();
 
             config.Formatters.Remove(config.Formatters.XmlFormatter);
-
-            //Azure config
-            //var bus = GetAzureCommandBus();
 
             //Local config
             var commandDispatcher = new Dispatcher<ICommand, Task>();
 
-            var games = new AllGames();
-            var projectionsEventListener = new ProjectionEventListener(new List<IProjection> { games});
-            var eventPublisher = new EventPublisher(new List<IEventListener> { projectionsEventListener }, Console.WriteLine);
+            var awailableGames = new AwailableGames();
+            var endedGames = new EndendGames();
+
+            var projectionsEventListener = new ProjectionEventListener(new List<IProjection> { awailableGames, endedGames});
+            var eventPublisher = new EventPublisher(Console.WriteLine, projectionsEventListener);
             var eventStore = new PublishingEventStore(new InMemoryEventStore(() => new InMemoryEventStream()), eventPublisher);
 
             commandDispatcher.Register<IGameCommand>(
-                command => ApplicationService.UpdateAsync<Game.Domain.Game, GameState>(
-                    state => new Game.Domain.Game(state), eventStore, command, game => game.Handle(command)));
+                command => ApplicationService.UpdateAsync<RPS.Game.Domain.Game, GameState>(
+                    state => new RPS.Game.Domain.Game(state), eventStore, command, game => game.Handle(command)));
 
             var bus = new ApplicationServer(commandDispatcher.Dispatch, new ConsoleLogger());
 
             var cb = new ContainerBuilder();
             cb.RegisterInstance(bus).AsImplementedInterfaces();
-            cb.RegisterInstance(games).AsSelf();
+            cb.RegisterType<ReadService>().AsImplementedInterfaces();
+            cb.RegisterInstance(awailableGames).AsSelf();
+            cb.RegisterInstance(endedGames).AsSelf();
             cb.RegisterApiControllers(Assembly.GetExecutingAssembly());
 
             config.DependencyResolver = new AutofacWebApiDependencyResolver(cb.Build());
@@ -67,14 +74,5 @@ namespace RPS.Api
             });
         }
 
-        //private static ICommandBus GetAzureCommandBus()
-        //{
-        //    var connectionString = ConfigurationManager.AppSettings["Microsoft.ServiceBus.ConnectionString"];
-        //    var manager = NamespaceManager.CreateFromConnectionString(connectionString);
-        //    const string path = "commands";
-        //    if (!manager.QueueExists(path))
-        //        manager.CreateQueue(path);
-        //    return new CommandBus(new QueueSender(connectionString, path), new JsonTextSerializer());
-        //}
     }
 }

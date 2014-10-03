@@ -1,65 +1,80 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Threading.Tasks;
 using System.Web.Http;
-using Newtonsoft.Json.Linq;
-using RPS.Api.Extensions;
+using RPS.Api.PublicDomain;
 using Treefort.Commanding;
 using Treefort.Common;
-using Treefort.Messaging;
 using RPS.Game.Domain;
 
 namespace RPS.Api.Controllers
 {
+
+    [RoutePrefix("api/Games")]
     public class GamesController : ApiController
     {
         private readonly ICommandBus _commandBus;
-        private readonly AllGames _awailibleGames;
+        private readonly IReadService _readService;
 
-        public GamesController(ICommandBus commandBus, AllGames awailibleGames)
+        public GamesController(ICommandBus commandBus, IReadService readService)
         {
             _commandBus = commandBus;
-            _awailibleGames = awailibleGames;
+            _readService = readService;
         }
-        
-        [HttpPost, ActionName("create")]
-        public HttpResponseMessage CreateGame(JObject input)
+
+        [HttpPost]
+        [Route("")]
+        public HttpResponseMessage Create(PublicDomain.CreateGameCommand input)
         {
             var gameId = Guid.NewGuid();
-            var cmd = new CreateGameCommand(gameId, input.Value<string>("playerName"), input.Value<string>("gameName"), input.ToMove());
-            _commandBus.SendAsync(cmd); //Note - fire and forget with app server 
+
+            if (!ModelState.IsValid)
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+
+            Move move;
+            if (!Enum.TryParse(input.Move, true, out move))
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Invalid move");
+
+            var command = new RPS.Game.Domain.CreateGameCommand(gameId, input.PlayerName, input.PlayerName, move);
+            _commandBus.SendAsync(command); //Note - fire and forget with app server 
+
             return Request.CreateResponse(HttpStatusCode.Accepted)
-                .Tap(message => message.Headers.Location = new Uri(Url.Link("DefaultApi", new { id = gameId })));
+                .Tap(message => message.Headers.Location = new Uri(Url.Link(RouteConfiguration.AwailableGamesRoute,  new {})));
         }
 
-        [HttpPost, ActionName("move")]
-        public async Task<HttpResponseMessage> MoveAsync([FromUri]Guid id, JObject input)
+        [HttpPut]
+        [Route("awailable/{id:Guid}")]
+        public HttpResponseMessage Move(Guid id, PublicDomain.MakeMoveCommand input)
         {
-            await _commandBus.SendAsync(null);
+            if (!ModelState.IsValid)
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+
+            Move move;
+            if (!Enum.TryParse(input.Move, true, out move))
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Invalid move");
+
+            var command = new RPS.Game.Domain.MakeMoveCommand(id, move, input.PlayerName);
+
+            _commandBus.SendAsync(command);
             return Request.CreateResponse(HttpStatusCode.Accepted).Tap(
-                    r => r.Headers.Location = new Uri(Url.Link("DefaultApi", new { id })));
+                    r => r.Headers.Location = new Uri(Url.Link(RouteConfiguration.EndedGamesRoute, new { })));
         }
 
-        public IHttpActionResult Get(Guid id)
+        
+        [Route("awailable", Name = RouteConfiguration.AwailableGamesRoute)]
+        public IEnumerable<Game> GetAwailable()
         {
-            var game = _awailibleGames
-                .Games.SingleOrDefault(x => x.Key == id);
-
-            if (game.IsDefault())
-                return NotFound();
-
-            return Ok(game.Value);
+            return _readService
+                .AwailableGames;
         }
-
-        public IEnumerable<string> Get()
+        
+        [Route("ended", Name = RouteConfiguration.EndedGamesRoute)]
+        public IEnumerable<EndedGame> GetEnded()
         {
-            return _awailibleGames
-                .Games
-                .Select(x => x.Value)
-                .ToList();
-        }
+            return _readService.EndedGames;
+        }    
+
     }
+
 }

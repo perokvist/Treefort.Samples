@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Configuration;
 using Treefort.Commanding;
 
 namespace RPS.Game.Domain
@@ -43,12 +42,11 @@ namespace RPS.Game.Domain
             CorrelationId = Guid.NewGuid();
         }
 
-        public Guid GameId { get; set; }
-        public Move Move { get; set; }
-        public string PlayerName { get; set; }
-
+        public Guid GameId { get; private set; }
+        public Move Move { get; private set; }
+        public string PlayerName { get; private set; }
+        
         public Guid AggregateId { get; private set; }
-
         public Guid CorrelationId { get; private set; }
     }
 
