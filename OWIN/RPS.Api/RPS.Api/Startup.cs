@@ -46,8 +46,9 @@ namespace RPS.Api
             var awailableGames = new AwailableGames();
             var endedGames = new EndendGames();
 
-            var projectionsEventListener = new ProjectionEventListener(new List<IProjection> { awailableGames, endedGames});
-            var eventPublisher = new EventPublisher(Console.WriteLine, projectionsEventListener);
+            //TODO log to trace
+            //http://blog.amitapple.com/post/2014/06/azure-website-logging/#.VC6_jvmSyPY
+            var eventPublisher = new EventPublisher(Console.WriteLine, new ProjectionEventListener(awailableGames, endedGames));
             var eventStore = new PublishingEventStore(new InMemoryEventStore(() => new InMemoryEventStream()), eventPublisher);
 
             commandDispatcher.Register<IGameCommand>(
