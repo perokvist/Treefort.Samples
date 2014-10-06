@@ -1,18 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Autofac;
 using Autofac.Integration.WebApi;
 using Microsoft.Owin;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using Owin;
-using RPS.Api.Controllers;
-using RPS.Api.PublicDomain;
 using RPS.Game.Domain;
+using RPS.Game.Domain.Public;
+using RPS.Game.ReadModel;
 using Treefort.Application;
 using Treefort.Events;
 using Treefort.Infrastructure;
@@ -52,8 +48,8 @@ namespace RPS.Api
             var eventStore = new PublishingEventStore(new InMemoryEventStore(() => new InMemoryEventStream()), eventPublisher);
 
             commandDispatcher.Register<IGameCommand>(
-                command => ApplicationService.UpdateAsync<RPS.Game.Domain.Game, GameState>(
-                    state => new RPS.Game.Domain.Game(state), eventStore, command, game => game.Handle(command)));
+                command => ApplicationService.UpdateAsync<Game.Domain.Game, GameState>(
+                    state => new Game.Domain.Game(state), eventStore, command, game => game.Handle(command)));
 
             var bus = new ApplicationServer(commandDispatcher.Dispatch, new ConsoleLogger());
 

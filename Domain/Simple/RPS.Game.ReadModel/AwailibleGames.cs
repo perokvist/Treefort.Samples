@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using RPS.Game.Domain;
 using Treefort.Events;
 using Treefort.Read;
 
-namespace RPS.Game.Domain.Public
+namespace RPS.Game.ReadModel
 {
     public class AwailableGames : IgnoreNonApplicableEventsAsync, IProjection
     {

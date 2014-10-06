@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using RPS.Game.Domain.Public;
 
 namespace RPS.Game.ReadModel
 {

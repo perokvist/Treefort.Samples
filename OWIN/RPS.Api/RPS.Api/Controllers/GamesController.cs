@@ -4,7 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using RPS.Api.PublicDomain;
+using RPS.Game.ReadModel;
 using Treefort.Commanding;
 using Treefort.Common;
 using RPS.Game.Domain;
@@ -26,7 +26,7 @@ namespace RPS.Api.Controllers
 
         [HttpPost]
         [Route("")]
-        public HttpResponseMessage Create(PublicDomain.CreateGameCommand input)
+        public HttpResponseMessage Create(Game.ReadModel.CreateGameCommand input)
         {
             var gameId = Guid.NewGuid();
 
@@ -46,7 +46,7 @@ namespace RPS.Api.Controllers
 
         [HttpPut]
         [Route("awailable/{id:Guid}")]
-        public HttpResponseMessage Move(Guid id, PublicDomain.MakeMoveCommand input)
+        public HttpResponseMessage Move(Guid id, Game.ReadModel.MakeMoveCommand input)
         {
             if (!ModelState.IsValid)
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
@@ -55,7 +55,7 @@ namespace RPS.Api.Controllers
             if (!Enum.TryParse(input.Move, true, out move))
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Invalid move");
 
-            var command = new RPS.Game.Domain.MakeMoveCommand(id, move, input.PlayerName);
+            var command = new Game.Domain.MakeMoveCommand(id, move, input.PlayerName);
 
             _commandBus.SendAsync(command);
             return Request.CreateResponse(HttpStatusCode.Accepted).Tap(
@@ -64,7 +64,7 @@ namespace RPS.Api.Controllers
 
 
         [Route("awailable/{id:Guid}", Name = RouteConfiguration.AwailableGamesRoute)]
-        public PublicDomain.Game GetAwailableGame(Guid id)
+        public Game.ReadModel.Game GetAwailableGame(Guid id)
         {
             return _readService
                 .AwailableGames
@@ -72,7 +72,7 @@ namespace RPS.Api.Controllers
         }
 
         [Route("awailable")]
-        public IEnumerable<PublicDomain.Game> GetAwailableGames()
+        public IEnumerable<Game.ReadModel.Game> GetAwailableGames()
         {
             return _readService
                 .AwailableGames
