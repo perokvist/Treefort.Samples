@@ -2,23 +2,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using RPS.Game.Domain;
-using Treefort.Common;
 using Treefort.Events;
 using Treefort.Read;
 
-namespace RPS.Api
+namespace RPS.Game.Domain.Public
 {
     public class AwailableGames : IgnoreNonApplicableEventsAsync, IProjection
     {
-        private readonly Dictionary<Guid, Game> _games;
+        private readonly Dictionary<Guid, ReadModel.Game> _games;
 
         public AwailableGames()
         {
-            _games = new Dictionary<Guid, Game>();
+            _games = new Dictionary<Guid, ReadModel.Game>();
         }
 
-        public IEnumerable<Game> GetGames()
+        public IEnumerable<ReadModel.Game> GetGames()
         {
             return _games.Select(x => x.Value).ToList();
         }
@@ -30,7 +28,7 @@ namespace RPS.Api
 
         public Task HandleAsync(GameCreatedEvent @event)
         {
-            _games.Add(@event.GameId, new Game {GameId = @event.GameId, Name = @event.GameName});
+            _games.Add(@event.GameId, new ReadModel.Game {GameId = @event.GameId, Name = @event.GameName});
             return Task.FromResult(new object());
         }
 

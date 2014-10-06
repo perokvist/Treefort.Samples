@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using RPS.Game.Domain;
-using Treefort.Common;
 using Treefort.Events;
 using Treefort.Read;
 
-namespace RPS.Api
+namespace RPS.Api.PublicDomain
 {
     public class EndendGames : IgnoreNonApplicableEventsAsync, IProjection
     {
@@ -30,7 +29,7 @@ namespace RPS.Api
 
         public Task HandleAsync(GameEndedEvent @event)
         {
-            _games.Add(@event.GameId, new EndedGame {GameId = @event.GameId, Name = "", Winner = ""});
+            _games.Add(@event.GameId, new EndedGame {GameId = @event.GameId, Name = @event.GameName , Winner = @event.Result.ToString()});
             return Task.FromResult(0);
         }
     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
@@ -36,11 +37,11 @@ namespace RPS.Api.Controllers
             if (!Enum.TryParse(input.Move, true, out move))
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Invalid move");
 
-            var command = new RPS.Game.Domain.CreateGameCommand(gameId, input.PlayerName, input.PlayerName, move);
+            var command = new RPS.Game.Domain.CreateGameCommand(gameId, input.PlayerName, input.GameName, move);
             _commandBus.SendAsync(command); //Note - fire and forget with app server 
 
             return Request.CreateResponse(HttpStatusCode.Accepted)
-                .Tap(message => message.Headers.Location = new Uri(Url.Link(RouteConfiguration.AwailableGamesRoute,  new {})));
+                .Tap(message => message.Headers.Location = new Uri(Url.Link(RouteConfiguration.AwailableGamesRoute, new { id = gameId })));
         }
 
         [HttpPut]
@@ -58,22 +59,41 @@ namespace RPS.Api.Controllers
 
             _commandBus.SendAsync(command);
             return Request.CreateResponse(HttpStatusCode.Accepted).Tap(
-                    r => r.Headers.Location = new Uri(Url.Link(RouteConfiguration.EndedGamesRoute, new { })));
+                    r => r.Headers.Location = new Uri(Url.Link(RouteConfiguration.EndedGamesRoute, new { id })));
         }
 
-        
-        [Route("awailable", Name = RouteConfiguration.AwailableGamesRoute)]
-        public IEnumerable<Game> GetAwailable()
+
+        [Route("awailable/{id:Guid}", Name = RouteConfiguration.AwailableGamesRoute)]
+        public PublicDomain.Game GetAwailableGame(Guid id)
         {
             return _readService
-                .AwailableGames;
+                .AwailableGames
+                .SingleOrDefault(x => x.GameId == id);
         }
-        
-        [Route("ended", Name = RouteConfiguration.EndedGamesRoute)]
-        public IEnumerable<EndedGame> GetEnded()
+
+        [Route("awailable")]
+        public IEnumerable<PublicDomain.Game> GetAwailableGames()
         {
-            return _readService.EndedGames;
-        }    
+            return _readService
+                .AwailableGames
+                .Reverse();
+        }
+
+        [Route("ended/{id:Guid}", Name = RouteConfiguration.EndedGamesRoute)]
+        public EndedGame GetEndedGame(Guid id)
+        {
+            return _readService
+                .EndedGames
+                .SingleOrDefault(x => x.GameId == id);
+        }
+
+        [Route("ended")]
+        public IEnumerable<EndedGame> GetEndedGames()
+        {
+            return _readService
+                .EndedGames
+                .Reverse();
+        }
 
     }
 

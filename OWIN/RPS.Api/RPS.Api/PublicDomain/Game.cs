@@ -1,6 +1,6 @@
 using System;
 
-namespace RPS.Api
+namespace RPS.Api.PublicDomain
 {
     public class Game
     {

@@ -59,7 +59,7 @@ namespace RPS.Api
 
             var cb = new ContainerBuilder();
             cb.RegisterInstance(bus).AsImplementedInterfaces();
-            cb.RegisterType<ReadService>().AsImplementedInterfaces();
+            cb.RegisterType<ReadService>().AsImplementedInterfaces().SingleInstance();
             cb.RegisterInstance(awailableGames).AsSelf();
             cb.RegisterInstance(endedGames).AsSelf();
             cb.RegisterApiControllers(Assembly.GetExecutingAssembly());
