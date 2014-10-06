@@ -62,10 +62,11 @@ namespace RPS.Game.Domain
                 return Enumerable.Empty<IEvent>();
             
             var result = Wins(_state.CreatorMove, command.Move);
+
             return new List<IEvent>
                 {
                     new MadeMoveEvent(command.GameId, command.Move, command.PlayerName),
-                    new GameEndedEvent(command.GameId, result, new Tuple<string, string>(_state.CreatorMove.ToString(), command.Move.ToString()))
+                    new GameEndedEvent(command.GameId, result, new Tuple<string, string>(_state.CreatorName, command.PlayerName), _state.GameName)
                 };
 
         }

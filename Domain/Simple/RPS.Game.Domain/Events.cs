@@ -42,16 +42,18 @@ namespace RPS.Game.Domain
     }
     public class GameEndedEvent : IEvent
     {
-        public GameEndedEvent(Guid gameId, GameResult result, Tuple<string,string> players)
+        public GameEndedEvent(Guid gameId, GameResult result, Tuple<string,string> players, string gameName)
         {
             GameId = gameId;
             Result = result;
             Players = players;
+            GameName = gameName;
             SourceId = GameId;
         }
        
         public Guid GameId { get; set; }
         public GameResult Result { get; set; }
+        public string GameName { get; set; }
         public Tuple<string, string> Players { get; set; }
 
         public Guid CorrelationId { get; set; }
