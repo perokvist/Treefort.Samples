@@ -43,7 +43,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AwailibleGames.cs" />
+    <Compile Include="AvailableGames.cs" />
     <Compile Include="CreateGameCommand.cs" />
     <Compile Include="EndedGame.cs" />
     <Compile Include="EndendGames.cs" />

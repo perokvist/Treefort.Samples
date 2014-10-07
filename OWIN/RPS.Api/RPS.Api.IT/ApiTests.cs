@@ -25,7 +25,7 @@ namespace RPS.Api.IT
         public async void GamesReturnsProjection()
         {
             var client = new HttpClient();
-            var response = await client.GetAsync(_baseAddress + "api/Games/awailable");
+            var response = await client.GetAsync(_baseAddress + "api/Games/available");
             var games = await response.Content.ReadAsAsync<List<Game.ReadModel.Game>>();
             Assert.Empty(games);
         }
@@ -42,7 +42,7 @@ namespace RPS.Api.IT
         public async void MakeMoveReturnsAccepted()
         {
             var client = new HttpClient();
-            var response = await client.PutAsJsonAsync(_baseAddress + "api/Games/awailable/" + Guid.NewGuid(), new { playerName = "per2", move = "paper" });
+            var response = await client.PutAsJsonAsync(_baseAddress + "api/Games/available/" + Guid.NewGuid(), new { playerName = "per2", move = "paper" });
             Assert.Equal(HttpStatusCode.Accepted, response.StatusCode); 
         }
 
@@ -55,7 +55,7 @@ namespace RPS.Api.IT
                 await Task.Delay(50);
                 var awailableResponse = await client.GetAsync(createResponse.Headers.Location);
                 var game = await awailableResponse.Content.ReadAsAsync<Game.ReadModel.Game>();
-                var moveResponse = await client.PutAsJsonAsync(_baseAddress + "api/Games/awailable/" + game.GameId, new { playerName = "Lugi", move = "paper" });
+                var moveResponse = await client.PutAsJsonAsync(_baseAddress + "api/Games/available/" + game.GameId, new { playerName = "Lugi", move = "paper" });
                 await Task.Delay(50);
                 var endenResponse = await client.GetAsync(moveResponse.Headers.Location);
                 var endGame = await endenResponse.Content.ReadAsAsync<Game.ReadModel.EndedGame>();

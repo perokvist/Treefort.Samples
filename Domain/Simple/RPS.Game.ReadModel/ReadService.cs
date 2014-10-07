@@ -4,16 +4,16 @@ namespace RPS.Game.ReadModel
 {
     public class ReadService : IReadService
     {
-        private readonly AwailableGames _awailableGames;
+        private readonly AvailableGames _availableGames;
         private readonly EndendGames _endendGames;
 
-        public ReadService(AwailableGames awailableGames, EndendGames endendGames)
+        public ReadService(AvailableGames availableGames, EndendGames endendGames)
         {
-            _awailableGames = awailableGames;
+            _availableGames = availableGames;
             _endendGames = endendGames;
         }
 
-        public IEnumerable<Game> AwailableGames { get { return _awailableGames.GetGames(); }
+        public IEnumerable<Game> AvailableGames { get { return _availableGames.GetGames(); }
         }
         public IEnumerable<EndedGame> EndedGames { get { return _endendGames.GetGames(); }
         }

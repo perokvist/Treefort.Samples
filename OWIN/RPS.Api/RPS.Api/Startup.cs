@@ -7,7 +7,6 @@ using Autofac.Integration.WebApi;
 using Microsoft.Owin;
 using Owin;
 using RPS.Game.Domain;
-using RPS.Game.Domain.Public;
 using RPS.Game.ReadModel;
 using Treefort.Application;
 using Treefort.Events;
@@ -22,7 +21,7 @@ namespace RPS.Api
     public static class RouteConfiguration
     {
         public const string GamesRoute = "Games";
-        public const string AwailableGamesRoute = "Awailable";
+        public const string AvailableGamesRoute = "Available";
         public const string EndedGamesRoute = "Ended";
 
     }
@@ -39,7 +38,7 @@ namespace RPS.Api
             //Local config
             var commandDispatcher = new Dispatcher<ICommand, Task>();
 
-            var awailableGames = new AwailableGames();
+            var awailableGames = new AvailableGames();
             var endedGames = new EndendGames();
 
             //TODO log to trace

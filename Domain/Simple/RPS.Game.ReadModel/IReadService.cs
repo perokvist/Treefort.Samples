@@ -4,7 +4,7 @@ namespace RPS.Game.ReadModel
 {
     public interface IReadService
     {
-        IEnumerable<Game> AwailableGames { get; }
+        IEnumerable<Game> AvailableGames { get; }
         IEnumerable<EndedGame> EndedGames { get; }  
     }
 }

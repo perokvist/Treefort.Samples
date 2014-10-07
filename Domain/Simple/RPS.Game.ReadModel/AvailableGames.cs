@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,13 +9,13 @@ using Treefort.Read;
 
 namespace RPS.Game.ReadModel
 {
-    public class AwailableGames : IgnoreNonApplicableEventsAsync, IProjection
+    public class AvailableGames : IgnoreNonApplicableEventsAsync, IProjection
     {
-        private readonly Dictionary<Guid, ReadModel.Game> _games;
+        private readonly ConcurrentDictionary<Guid, ReadModel.Game> _games;
 
-        public AwailableGames()
+        public AvailableGames()
         {
-            _games = new Dictionary<Guid, ReadModel.Game>();
+            _games = new ConcurrentDictionary<Guid, Game>();
         }
 
         public IEnumerable<ReadModel.Game> GetGames()
@@ -29,14 +30,15 @@ namespace RPS.Game.ReadModel
 
         public Task HandleAsync(GameCreatedEvent @event)
         {
-            _games.Add(@event.GameId, new ReadModel.Game {GameId = @event.GameId, Name = @event.GameName});
+            _games.GetOrAdd(@event.GameId, new ReadModel.Game {GameId = @event.GameId, Name = @event.GameName});
             return Task.FromResult(new object());
         }
 
         public Task HandleAsync(GameEndedEvent @event)
         {
+            Game game;
             if (_games.ContainsKey(@event.GameId))
-                _games.Remove(@event.GameId);
+                _games.TryRemove(@event.GameId, out game);
             return Task.FromResult(new object());
         }
     }

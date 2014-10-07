@@ -41,7 +41,7 @@ namespace RPS.Api.Controllers
             _commandBus.SendAsync(command); //Note - fire and forget with app server 
 
             return Request.CreateResponse(HttpStatusCode.Accepted)
-                .Tap(message => message.Headers.Location = new Uri(Url.Link(RouteConfiguration.AwailableGamesRoute, new { id = gameId })));
+                .Tap(message => message.Headers.Location = new Uri(Url.Link(RouteConfiguration.AvailableGamesRoute, new { id = gameId })));
         }
 
         [HttpPut]
@@ -63,28 +63,38 @@ namespace RPS.Api.Controllers
         }
 
 
-        [Route("awailable/{id:Guid}", Name = RouteConfiguration.AwailableGamesRoute)]
-        public Game.ReadModel.Game GetAwailableGame(Guid id)
+        [Route("available/{id:Guid}", Name = RouteConfiguration.AvailableGamesRoute)]
+        public IHttpActionResult GetAvailableGame(Guid id)
         {
-            return _readService
-                .AwailableGames
+            var game = _readService
+                .AvailableGames
                 .SingleOrDefault(x => x.GameId == id);
+
+            if (game != null)
+                return Ok(game);
+
+            return NotFound();
         }
 
-        [Route("awailable")]
-        public IEnumerable<Game.ReadModel.Game> GetAwailableGames()
+        [Route("available")]
+        public IEnumerable<Game.ReadModel.Game> GetAvailableGames()
         {
             return _readService
-                .AwailableGames
+                .AvailableGames
                 .Reverse();
         }
 
         [Route("ended/{id:Guid}", Name = RouteConfiguration.EndedGamesRoute)]
-        public EndedGame GetEndedGame(Guid id)
+        public IHttpActionResult GetEndedGame(Guid id)
         {
-            return _readService
-                .EndedGames
-                .SingleOrDefault(x => x.GameId == id);
+            var game = _readService
+                  .EndedGames
+                  .SingleOrDefault(x => x.GameId == id);
+
+            if (game != null)
+                return Ok(game);
+
+            return NotFound();
         }
 
         [Route("ended")]

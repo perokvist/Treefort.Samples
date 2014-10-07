@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,11 +11,11 @@ namespace RPS.Game.ReadModel
 {
     public class EndendGames : IgnoreNonApplicableEventsAsync, IProjection
     {
-        private readonly Dictionary<Guid, EndedGame> _games;
+        private readonly ConcurrentDictionary<Guid, EndedGame> _games;
 
         public EndendGames()
         {
-            _games = new Dictionary<Guid, EndedGame>();
+            _games = new ConcurrentDictionary<Guid, EndedGame>();
         }
 
         public IEnumerable<EndedGame> GetGames()
@@ -29,7 +30,7 @@ namespace RPS.Game.ReadModel
 
         public Task HandleAsync(GameEndedEvent @event)
         {
-            _games.Add(@event.GameId, new EndedGame {GameId = @event.GameId, Name = @event.GameName , Winner = @event.Result.ToString()});
+            _games.GetOrAdd(@event.GameId, new EndedGame {GameId = @event.GameId, Name = @event.GameName , Winner = @event.Result.ToString()});
             return Task.FromResult(0);
         }
     }
