@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Microsoft.Owin.Hosting;
 using System;
@@ -47,14 +48,31 @@ namespace RPS.Api.IT
         }
 
         [Fact]
+        public async void SecondRequestReturns304()
+        {
+            using (var client = new HttpClient())
+            {
+                var createResponse = await client.PostAsJsonAsync(_baseAddress + "api/Games/", new { playerName = "Wario", gameName = "CacheGame", move = "rock" });
+                await Task.Delay(50);
+                var availableResponse = await client.GetAsync(createResponse.Headers.Location);
+                client.DefaultRequestHeaders.IfNoneMatch.Add(new EntityTagHeaderValue(availableResponse.Headers.ETag.Tag));
+                var availableResponse2 = await client.GetAsync(createResponse.Headers.Location);
+                Assert.Equal(HttpStatusCode.NotModified, availableResponse2.StatusCode); 
+            }
+        }
+
+        [Fact]
         public async void FullGame()
         {
             using (var client = new HttpClient())
             {
                 var createResponse = await client.PostAsJsonAsync(_baseAddress + "api/Games/", new { playerName = "Mario", gameName = "FullGame", move = "rock" });
                 await Task.Delay(50);
-                var awailableResponse = await client.GetAsync(createResponse.Headers.Location);
-                var game = await awailableResponse.Content.ReadAsAsync<Game.ReadModel.Game>();
+                var availableResponse = await client.GetAsync(createResponse.Headers.Location);
+                var game = await availableResponse.Content.ReadAsAsync<Game.ReadModel.Game>();
+                
+                //client.DefaultRequestHeaders.IfNoneMatch.Add(new EntityTagHeaderValue(availableResponse.Headers.ETag.Tag));
+
                 var moveResponse = await client.PutAsJsonAsync(_baseAddress + "api/Games/available/" + game.GameId, new { playerName = "Lugi", move = "paper" });
                 await Task.Delay(50);
                 var endenResponse = await client.GetAsync(moveResponse.Headers.Location);

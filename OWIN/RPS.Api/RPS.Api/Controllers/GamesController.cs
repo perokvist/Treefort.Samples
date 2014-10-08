@@ -45,7 +45,7 @@ namespace RPS.Api.Controllers
         }
 
         [HttpPut]
-        [Route("awailable/{id:Guid}")]
+        [Route("available/{id:Guid}")]
         public HttpResponseMessage Move(Guid id, Game.ReadModel.MakeMoveCommand input)
         {
             if (!ModelState.IsValid)

@@ -13,6 +13,8 @@ using Treefort.Events;
 using Treefort.Infrastructure;
 using Treefort.Commanding;
 using Treefort.Read;
+using CacheCow.Server;
+using CacheCow.Common;
 
 [assembly: OwinStartup(typeof(RPS.Api.Startup))]
 
@@ -29,7 +31,7 @@ namespace RPS.Api
     {
         public void Configuration(IAppBuilder app)
         {
-
+            
             var config = new HttpConfiguration();
             config.MapHttpAttributeRoutes();
 
@@ -37,7 +39,7 @@ namespace RPS.Api
 
             //Local config
             var commandDispatcher = new Dispatcher<ICommand, Task>();
-
+            
             var awailableGames = new AvailableGames();
             var endedGames = new EndendGames();
 
@@ -61,6 +63,7 @@ namespace RPS.Api
 
             config.DependencyResolver = new AutofacWebApiDependencyResolver(cb.Build());
 
+            config.MessageHandlers.Add(new CachingHandler(config, new InMemoryEntityTagStore()));
             app.UseWebApi(config);
 
             app.Run(context =>
