@@ -48,6 +48,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+    <Content Include="site\js\actions\GameServerActionCreators.js" />
+    <Content Include="site\js\components\App.react.js" />
+    <Content Include="site\js\components\GameList.react.js" />
+    <Content Include="site\js\stores\GameStore.js" />
+    <Content Include="site\js\utils\ServerUtil.js" />
+    <Content Include="site\package.json" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -56,6 +62,11 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="site\index.html" />
+    <Content Include="site\index_old.html" />
+    <Content Include="site\js\app.js" />
+    <Content Include="site\js\dispatcher\AppDispatcher.js" />
+    <Content Include="site\scripts\rps.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -66,6 +77,9 @@
       <Project>{50a59b34-821c-4570-927c-be07da3cf529}</Project>
       <Name>RPS.Api</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="site\js\constants\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

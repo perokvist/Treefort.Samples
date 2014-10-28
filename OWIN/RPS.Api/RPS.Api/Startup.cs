@@ -5,6 +5,8 @@ using System.Web.Http;
 using Autofac;
 using Autofac.Integration.WebApi;
 using Microsoft.Owin;
+using Microsoft.Owin.FileSystems;
+using Microsoft.Owin.StaticFiles;
 using Owin;
 using RPS.Game.Domain;
 using RPS.Game.ReadModel;
@@ -31,9 +33,12 @@ namespace RPS.Api
     {
         public void Configuration(IAppBuilder app)
         {
-            
+
+            app.UseFileServer(new FileServerOptions() { FileSystem = new PhysicalFileSystem("site") });
+
             var config = new HttpConfiguration();
             config.MapHttpAttributeRoutes();
+            config.MessageHandlers.Add(new NullJsonHandler());
 
             config.Formatters.Remove(config.Formatters.XmlFormatter);
 

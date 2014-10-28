@@ -40,7 +40,7 @@ namespace RPS.Api.Controllers
             var command = new RPS.Game.Domain.CreateGameCommand(gameId, input.PlayerName, input.GameName, move);
             _commandBus.SendAsync(command); //Note - fire and forget with app server 
 
-            return Request.CreateResponse(HttpStatusCode.Accepted)
+            return Request.CreateResponse(HttpStatusCode.Accepted )
                 .Tap(message => message.Headers.Location = new Uri(Url.Link(RouteConfiguration.AvailableGamesRoute, new { id = gameId })));
         }
 
@@ -81,7 +81,8 @@ namespace RPS.Api.Controllers
         {
             return _readService
                 .AvailableGames
-                .Reverse();
+                .Reverse()
+                .Concat(new[] { new Game.ReadModel.Game {Name = "Spel 1"}});
         }
 
         [Route("ended/{id:Guid}", Name = RouteConfiguration.EndedGamesRoute)]

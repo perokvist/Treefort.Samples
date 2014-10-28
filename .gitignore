@@ -1,6 +1,10 @@
 *.nupkg
 *.bat
 
+node_modules
+lib/
+*.log
+
 #################
 ## Eclipse
 #################
