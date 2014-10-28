@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+    <Content Include="site\dist\scripts\bundle.js" />
     <Content Include="site\js\actions\GameServerActionCreators.js" />
     <Content Include="site\js\components\App.react.js" />
     <Content Include="site\js\components\GameList.react.js" />
@@ -62,11 +63,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="site\index.html" />
-    <Content Include="site\index_old.html" />
+    <Content Include="site\dist\index.html" />
     <Content Include="site\js\app.js" />
     <Content Include="site\js\dispatcher\AppDispatcher.js" />
-    <Content Include="site\scripts\rps.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>

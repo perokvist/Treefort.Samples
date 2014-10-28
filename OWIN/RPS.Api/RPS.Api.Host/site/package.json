@@ -1,8 +1,8 @@
 {
-  "name": "todomvc-flux",
-  "version": "0.0.2",
-  "description": "Example Flux architecture.",
-  "repository": "https://github.com/facebook/flux",
+  "name": "RPS-Game",
+  "version": "0.0.1",
+  "description": "RPS Treefort sample.",
+  "repository": "https://github.com/perokvist/Treefort.Samples",
   "main": "js/app.js",
   "dependencies": {
     "flux": "^2.0.0",
@@ -17,11 +17,11 @@
     "watchify": "~0.10.2"
   },
   "scripts": {
-    "start": "watchify -o js/bundle.js -v -d .",
-    "build": "NODE_ENV=production browserify . | uglifyjs -cm > js/bundle.min.js",
+    "start": "watchify -o dist/scripts/bundle.js -v -d .",
+    "build": "NODE_ENV=production browserify . | uglifyjs -cm > dist/scripts/bundle.min.js",
     "test": "jest"
   },
-  "author": "Bill Fisher",
+  "author": "Per Okvist",
   "browserify": {
     "transform": [
       "reactify",
