@@ -54,6 +54,7 @@
     <Content Include="src\pages\404.html" />
     <Content Include="src\pages\Home.jsx" />
     <Content Include="src\pages\index.html" />
+    <Content Include="src\pages\index.html" />
     <Content Include="src\pages\Privacy.jsx" />
     <Content Include="src\stores\GameStore.js" />
     <Content Include="src\styles\.csscomb.json" />
