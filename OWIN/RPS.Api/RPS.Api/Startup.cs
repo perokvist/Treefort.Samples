@@ -48,8 +48,6 @@ namespace RPS.Api
             var awailableGames = new AvailableGames();
             var endedGames = new EndendGames();
 
-            //TODO log to trace
-            //http://blog.amitapple.com/post/2014/06/azure-website-logging/#.VC6_jvmSyPY
             var eventPublisher = new EventPublisher(Console.WriteLine, new ProjectionEventListener(awailableGames, endedGames));
             var eventStore = new PublishingEventStore(new InMemoryEventStore(() => new InMemoryEventStream()), eventPublisher);
 

@@ -1,13 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30501.0
+VisualStudioVersion = 12.0.30723.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RPS.Api", "RPS.Api\RPS.Api.csproj", "{50A59B34-821C-4570-927C-BE07DA3CF529}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RPS.Api.Host", "RPS.Api.Host\RPS.Api.Host.csproj", "{20CF581D-76D4-4657-984D-729FB1E0AFAA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RPS.Api.IT", "RPS.Api.IT\RPS.Api.IT.csproj", "{35225A11-D250-4B05-8832-40C414CA010A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RPS.Web", "RPS.Web\RPS.Web.csproj", "{CA09D365-C23B-49F0-BC5F-84D2E960082E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{35225A11-D250-4B05-8832-40C414CA010A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{35225A11-D250-4B05-8832-40C414CA010A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{35225A11-D250-4B05-8832-40C414CA010A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA09D365-C23B-49F0-BC5F-84D2E960082E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA09D365-C23B-49F0-BC5F-84D2E960082E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA09D365-C23B-49F0-BC5F-84D2E960082E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA09D365-C23B-49F0-BC5F-84D2E960082E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
