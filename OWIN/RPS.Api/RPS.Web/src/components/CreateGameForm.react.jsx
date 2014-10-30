@@ -22,12 +22,15 @@ var CreateGameForm = React.createClass({
   },
   render: function() {
     return (
-      <form className="game-form" onSubmit={this.handleSubmit}>
+	<div>
+	  <h3>Create</h3>	
+	  <form className="game-form" onSubmit={this.handleSubmit}>
         <input type="text" placeholder="Game Name" ref="gameName" />
         <input type="text" placeholder="Your name" ref="playerName" />
         <input type="text" placeholder="Your move" ref="move" />
         <input type="submit" value="Post" />
       </form>
+	</div>
     );
   }
 });

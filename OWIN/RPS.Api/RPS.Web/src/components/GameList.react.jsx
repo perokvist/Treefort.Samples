@@ -7,9 +7,9 @@ var Game = React.createClass({
     render: function() {
         return (
           <div className="game">
-            <h2>
-              {this.props.Name} {this.props.GameId}
-            </h2>
+            <h3>
+              {this.props.Name} 
+            </h3>
 			<PlayForm GameId={this.props.GameId} />
           </div>
       );
@@ -43,6 +43,7 @@ var GameList = React.createClass({
 });
 return (
   <div className="gameList">
+	<h2>Games</h2>
     {gameNodes}
   </div>
     );

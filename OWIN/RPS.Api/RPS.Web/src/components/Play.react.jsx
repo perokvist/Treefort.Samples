@@ -22,13 +22,18 @@ var PlayForm = React.createClass({
   },
     render: function() {
     return (
+	<div>
+	<h5>Play</h5>
       <form className="game-form" onSubmit={this.handleSubmit}>
         <input type="text" placeholder="Your Name" ref="playerName" />
         <select id="move" ref="move">
+			<option>Rock</option>
 			<option>Paper</option>
+			<option>Scissors</option>
 		</select>
 		<input type="submit" value="Post" />
       </form>
+	</div>
     );
     }
 

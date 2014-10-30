@@ -81,8 +81,7 @@ namespace RPS.Api.Controllers
         {
             return _readService
                 .AvailableGames
-                .Reverse()
-                .Concat(new[] { new Game.ReadModel.Game {Name = "Spel 1"}});
+                .Reverse();
         }
 
         [Route("ended/{id:Guid}", Name = RouteConfiguration.EndedGamesRoute)]

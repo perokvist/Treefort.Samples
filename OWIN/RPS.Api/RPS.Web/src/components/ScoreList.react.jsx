@@ -6,9 +6,9 @@ var Score = React.createClass({
     render: function() {
         return (
           <div className="game">
-            <h2>
+            <h5>
               {this.props.Name}
-            </h2>
+            </h5>
 			<p>{this.props.Winner}</p>
           </div>
       );

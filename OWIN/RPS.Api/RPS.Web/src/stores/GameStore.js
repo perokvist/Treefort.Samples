@@ -1,6 +1,7 @@
 ﻿var AppDispatcher = require('../dispatcher/AppDispatcher');
 var EventEmitter = require('events').EventEmitter;
 var merge = require('react/lib/merge');
+var _ = require('underscore');
 
 var CHANGE_EVENT = 'change';
 
@@ -46,6 +47,7 @@ GameStore.dispatchToken = AppDispatcher.register(function (payload) {
             break;
         case "GAME_ENDED":
             _score.push(action.game);
+            _games = _.filter(_games, function(x) { return x.gameId != action.game.gameId; });
             GameStore.emitChange();
             break;
         default:
