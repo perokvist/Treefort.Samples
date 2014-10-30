@@ -5,28 +5,30 @@ var merge = require('react/lib/merge');
 var CHANGE_EVENT = 'change';
 
 var _games = {};
+var _score = [];
 
 var GameStore = merge(EventEmitter.prototype, {
-
-    emitChange: function () {
+    emitChange: function() {
         this.emit(CHANGE_EVENT);
     },
 
     /**
      * @param {function} callback
      */
-    addChangeListener: function (callback) {
+    addChangeListener: function(callback) {
         this.on(CHANGE_EVENT, callback);
     },
 
-    get: function (id) {
+    get: function(id) {
         return _games[id];
     },
 
-    getAll: function () {
+    getAll: function() {
         return _games;
     },
-
+    getScore: function() {
+        return _score;
+    }
 });
 
 GameStore.dispatchToken = AppDispatcher.register(function (payload) {
@@ -38,7 +40,14 @@ GameStore.dispatchToken = AppDispatcher.register(function (payload) {
             _games = action.games;
             GameStore.emitChange();
             break;
-
+        case "GAME_CREATED":
+            _games.push(action.game);
+            GameStore.emitChange();
+            break;
+        case "GAME_ENDED":
+            _score.push(action.game);
+            GameStore.emitChange();
+            break;
         default:
             // do nothing
     }

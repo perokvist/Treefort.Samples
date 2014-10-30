@@ -32,6 +32,7 @@
     <Content Include="build\**\*.*" />
     <Content Include="config\**\*.*" />
     <Content Include="docs\**\*.*" />
+    <Content Include="src\actions\GameActionCreators.js" />
     <Content Include="src\actions\GameServerActionCreators.js" />
     <None Include="src\app.jsx" />
     <Content Include="src\App.jsx" />
@@ -44,18 +45,12 @@
     <Content Include="src\assets\tile-wide.png" />
     <Content Include="src\assets\tile.png" />
     <None Include="src\components\App.react.jsx" />
+    <Content Include="src\components\CreateGameForm.react.jsx" />
     <None Include="src\components\GameList.react.jsx" />
-    <Content Include="src\components\Navbar.jsx" />
-    <Content Include="src\components\NavbarSpec.jsx" />
     <Content Include="src\dispatcher\AppDispatcher.js" />
     <Content Include="src\images\logo-small.png" />
     <Content Include="src\images\logo-small%402x.png" />
-    <Content Include="src\layouts\Default.jsx" />
-    <Content Include="src\pages\404.html" />
-    <Content Include="src\pages\Home.jsx" />
     <Content Include="src\pages\index.html" />
-    <Content Include="src\pages\index.html" />
-    <Content Include="src\pages\Privacy.jsx" />
     <Content Include="src\stores\GameStore.js" />
     <Content Include="src\styles\.csscomb.json" />
     <Content Include="src\styles\.csslintrc" />
@@ -71,9 +66,12 @@
     <Content Include="package.json" />
     <Content Include="README.txt" />
     <Content Include="src\utils\ServerUtil.js" />
+    <Content Include="src\components\Play.react.jsx" />
+    <Content Include="src\components\ScoreList.react.jsx" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="src\constants\" />
+    <Folder Include="src\layouts\" />
     <Folder Include="test\" />
   </ItemGroup>
   <PropertyGroup>

@@ -1,16 +1,15 @@
-/** @jsx React.DOM */
+﻿/** @jsx React.DOM */
 var GameStore = require('../stores/GameStore.js');
-var PlayForm = require('./Play.react');
 var React = require('react');
 
-var Game = React.createClass({
+var Score = React.createClass({
     render: function() {
         return (
           <div className="game">
             <h2>
-              {this.props.Name} {this.props.GameId}
+              {this.props.Name}
             </h2>
-			<PlayForm GameId={this.props.GameId} />
+			<p>{this.props.Winner}</p>
           </div>
       );
     }
@@ -19,31 +18,29 @@ var Game = React.createClass({
 
 function getStateFromStores() {
     return {
-        games: GameStore.getAll()
+        score: GameStore.getScore()
     };
 }
 
-var GameList = React.createClass({
+var ScoreList = React.createClass({
 
     getInitialState: function() {
-        return { games : []};
+        return { score : []};
     },
 
     componentDidMount: function() {
         GameStore.addChangeListener(this._onChange);
-	    //setInterval(this.getStateFromStores, this.props.pollInterval);
     },
 
     render: function () {
-        console.log(this.state.games);
-        var gameNodes = this.state.games.map(function(game, index) {
+        var scoreNodes = this.state.score.map(function(game, index) {
             return (
-              <Game Name={game.Name} GameId={game.GameId} key={index} />
+              <Score Name={game.Name} Winner={game.Winner} key={index} />
             );
 });
 return (
   <div className="gameList">
-    {gameNodes}
+    {scoreNodes}
   </div>
     );
 },
@@ -56,4 +53,4 @@ _onChange: function() {
 
 });
 
-module.exports = GameList;
+module.exports = ScoreList;

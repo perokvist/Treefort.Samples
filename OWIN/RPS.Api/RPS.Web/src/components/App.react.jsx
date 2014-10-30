@@ -1,5 +1,7 @@
 /** @jsx React.DOM */
 var GameList = require('./GameList.react');
+var CreateGameForm = require('./CreateGameForm.react');
+var ScoreList = require('./ScoreList.react');
 var React = require('react');
 
 var App = React.createClass({
@@ -10,7 +12,9 @@ var App = React.createClass({
     render: function() {
         return (
           <div className="rps-app">
-            <GameList />
+            <GameList pollInterval="200" />
+            <CreateGameForm />
+            <ScoreList />
           </div>
       );
     }
