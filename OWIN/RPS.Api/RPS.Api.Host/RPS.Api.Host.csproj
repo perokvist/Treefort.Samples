@@ -48,6 +48,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+    <Content Include="site\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="site\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="site\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="site\vendor\jquery-2.0.0\cdn\jquery-2.1.1.min.map" />
+    <Content Include="site\vendor\jquery-2.0.0\jquery.min.map" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -56,6 +61,13 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="site\app.js" />
+    <Content Include="site\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="site\index.html" />
+    <Content Include="site\vendor\jquery-2.0.0\cdn\jquery-2.1.1.js" />
+    <Content Include="site\vendor\jquery-2.0.0\cdn\jquery-2.1.1.min.js" />
+    <Content Include="site\vendor\jquery-2.0.0\jquery.js" />
+    <Content Include="site\vendor\jquery-2.0.0\jquery.min.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -67,7 +79,9 @@
       <Name>RPS.Api</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="site\images\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

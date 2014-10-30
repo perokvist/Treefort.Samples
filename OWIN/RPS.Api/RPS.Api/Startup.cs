@@ -34,7 +34,7 @@ namespace RPS.Api
         public void Configuration(IAppBuilder app)
         {
 
-            app.UseFileServer(new FileServerOptions() { FileSystem = new PhysicalFileSystem(@"site\dist") });
+            app.UseFileServer(new FileServerOptions() { FileSystem = new PhysicalFileSystem("site") });
 
             var config = new HttpConfiguration();
             config.MapHttpAttributeRoutes();
