@@ -5,6 +5,7 @@ using System.Web.Http;
 using Autofac;
 using Autofac.Integration.WebApi;
 using Microsoft.Owin;
+using Microsoft.Owin.Extensions;
 using Microsoft.Owin.FileSystems;
 using Microsoft.Owin.StaticFiles;
 using Owin;
@@ -18,7 +19,6 @@ using Treefort.Read;
 using CacheCow.Server;
 using CacheCow.Common;
 
-[assembly: OwinStartup(typeof(RPS.Api.Startup))]
 
 namespace RPS.Api
 {
@@ -31,10 +31,11 @@ namespace RPS.Api
     }
     public class Startup
     {
-        public void Configuration(IAppBuilder app)
+        public void Configuration(IAppBuilder app, Action<IAppBuilder> stageMakerHook)
         {
 
             app.UseFileServer(new FileServerOptions() { FileSystem = new PhysicalFileSystem("site") });
+            stageMakerHook(app);
 
             var config = new HttpConfiguration();
             config.MapHttpAttributeRoutes();

@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RPS.Api.IT", "RPS.Api.IT\RP
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RPS.Web", "RPS.Web\RPS.Web.csproj", "{CA09D365-C23B-49F0-BC5F-84D2E960082E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RPS.Api.IISHost", "RPS.Api.IISHost\RPS.Api.IISHost.csproj", "{56A78AF4-7B7A-4E02-8C09-F391B044D82E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{CA09D365-C23B-49F0-BC5F-84D2E960082E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CA09D365-C23B-49F0-BC5F-84D2E960082E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CA09D365-C23B-49F0-BC5F-84D2E960082E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56A78AF4-7B7A-4E02-8C09-F391B044D82E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56A78AF4-7B7A-4E02-8C09-F391B044D82E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56A78AF4-7B7A-4E02-8C09-F391B044D82E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56A78AF4-7B7A-4E02-8C09-F391B044D82E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

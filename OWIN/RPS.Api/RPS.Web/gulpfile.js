@@ -145,7 +145,8 @@ gulp.task('bundle', function (cb) {
 gulp.task('copyfiles', ['bundle'], function () {
     $.util.log("Copying build");
      gulp.src('./build/**')
-    .pipe(gulp.dest('../RPS.Api.Host/site/'));
+    .pipe(gulp.dest('../RPS.Api.Host/site/')
+    .pipe(gulp.dest('../RPS.Api.IISHost/site/')));
 });
 
 
