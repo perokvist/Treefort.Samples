@@ -35,7 +35,6 @@ namespace RPS.Api
         {
 
             app.UseFileServer(new FileServerOptions() { FileSystem = new PhysicalFileSystem("site") });
-            stageMakerHook(app);
 
             var config = new HttpConfiguration();
             config.MapHttpAttributeRoutes();
@@ -69,6 +68,7 @@ namespace RPS.Api
 
             config.MessageHandlers.Add(new CachingHandler(config, new InMemoryEntityTagStore()));
             app.UseWebApi(config);
+            stageMakerHook(app);
 
             app.Run(context =>
             {
