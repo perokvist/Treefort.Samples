@@ -6,6 +6,7 @@ namespace RPS.Game.ReadModel
     {
         public string Name { get; set; }
         public Guid GameId { get; set; }
+        public string Result { get; set; }
         public string Winner { get; set; }
     }
 }

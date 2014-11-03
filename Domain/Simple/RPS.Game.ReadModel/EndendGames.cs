@@ -30,7 +30,11 @@ namespace RPS.Game.ReadModel
 
         public Task HandleAsync(GameEndedEvent @event)
         {
-            _games.GetOrAdd(@event.GameId, new EndedGame {GameId = @event.GameId, Name = @event.GameName , Winner = @event.Result.ToString()});
+            var winner = string.Empty;
+            if(@event.Result != GameResult.Tie)
+                winner = @event.Result == GameResult.PlayerOneWin ? @event.Players.Item1 : @event.Players.Item2;
+
+            _games.GetOrAdd(@event.GameId, new EndedGame {GameId = @event.GameId, Name = @event.GameName, Winner = winner, Result = @event.Result.ToString()});
             return Task.FromResult(0);
         }
     }
