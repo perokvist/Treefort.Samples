@@ -35,7 +35,6 @@
     <Content Include="src\actions\GameActionCreators.js" />
     <Content Include="src\actions\GameServerActionCreators.js" />
     <None Include="src\app.jsx" />
-    <Content Include="src\App.jsx" />
     <Content Include="src\assets\apple-touch-icon-precomposed.png" />
     <Content Include="src\assets\browserconfig.xml" />
     <Content Include="src\assets\crossdomain.xml" />

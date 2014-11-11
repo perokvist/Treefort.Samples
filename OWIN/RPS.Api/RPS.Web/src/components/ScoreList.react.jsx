@@ -5,12 +5,14 @@ var React = require('react');
 var Score = React.createClass({
     render: function() {
         return (
-          <div className="game">
-            <h5>
-              {this.props.Name}
-            </h5>
-			<p>{this.props.Winner}</p>
-          </div>
+				<tr>
+					<td>
+						{this.props.Name}
+					</td>
+					<td>
+						{this.props.Winner}
+					</td>
+				</tr>
       );
     }
 });
@@ -40,7 +42,13 @@ var ScoreList = React.createClass({
 });
 return (
   <div className="gameList">
-    {scoreNodes}
+	<table className="table-striped">
+		<tr>
+			<th>Game</th>
+			<th>Winner</th>
+		</tr>
+		{scoreNodes}
+	</table>
   </div>
     );
 },

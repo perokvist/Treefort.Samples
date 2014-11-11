@@ -130,22 +130,22 @@
 	            }
 	        });
 	    },
-	    createGame: function(command) {
+	    createGame: function(command, cb) {
 	        $.ajax({
 	            url: url,
 	            dataType: 'json',
 	            type: 'POST',
-	            data: command,
-	            //contentType: 'application/json; charset=utf-8',
+	            data: JSON.stringify(command),
+	            contentType: 'application/json; charset=utf-8',
 	            success: function(data, status, xhr) {
-	                poll(xhr.getResponseHeader('Location'), 2000, function(game) { GameServerActionCreators.gameCreated(game); });
+	                poll(xhr.getResponseHeader('Location'), 2000, cb);
 	            },
 	            error: function(xhr, status, err) {
 	                console.error(url, status, err.toString());
 	            }
 	        });
 	    },
-	    makeMove: function (command) {
+	    makeMove: function (command, cb) {
 	        $.ajax({
 	            url: url + "available/" + command.gameId + "/",
 	            dataType: 'json',
@@ -153,7 +153,7 @@
 	            data: JSON.stringify(command),
 	            contentType: 'application/json; charset=utf-8',
 	            success: function (data, status, xhr) {
-	                poll(xhr.getResponseHeader('Location'), 2000, function (game) { GameServerActionCreators.gameEnded(game); });
+	                poll(xhr.getResponseHeader('Location'), 2000, cb);
 	            },
 	            error: function (xhr, status, err) {
 	                console.error(url, status, err.toString());
@@ -283,12 +283,14 @@
 	var Score = React.createClass({displayName: 'Score',
 	    render: function() {
 	        return (
-	          React.DOM.div({className: "game"}, 
-	            React.DOM.h5(null, 
-	              this.props.Name
-	            ), 
-				React.DOM.p(null, this.props.Winner)
-	          )
+					React.DOM.tr(null, 
+						React.DOM.td(null, 
+							this.props.Name
+						), 
+						React.DOM.td(null, 
+							this.props.Winner
+						)
+					)
 	      );
 	    }
 	});
@@ -318,7 +320,13 @@
 	});
 	return (
 	  React.DOM.div({className: "gameList"}, 
-	    scoreNodes
+		React.DOM.table({className: "table-striped"}, 
+			React.DOM.tr(null, 
+				React.DOM.th(null, "Game"), 
+				React.DOM.th(null, "Winner")
+			), 
+			scoreNodes
+		)
 	  )
 	    );
 	},
@@ -547,10 +555,26 @@
 
 	module.exports = {
 	    createGame: function (gameName, playerName, move) {
-	       GameWebAPIUtils.createGame({ gameName : gameName, playerName : playerName, move : move });
+	        var command = { gameName: gameName, playerName: playerName, move: move };
+	        var dispatch = function(game) {
+	            AppDispatcher.handleServerAction({
+	                type: "GAME_CREATED",
+	                game: game
+	            });
+	        };
+
+	        GameWebAPIUtils.createGame(command, dispatch);
 	    },
 	    makeMove: function (gameId, playerName, move) {
-	        GameWebAPIUtils.makeMove({ gameId: gameId, playerName: playerName, move: move });
+	        var command = { gameId: gameId, playerName: playerName, move: move };
+	        var dispatch = function (game) {
+	            AppDispatcher.handleServerAction({
+	                type: "GAME_ENDED",
+	                game: game
+	            });
+	        };
+
+	        GameWebAPIUtils.makeMove(command, dispatch);
 	    }
 	};
 
@@ -6540,20 +6564,8 @@
 	            type: "RECEIVE_AVAILABLE_GAMES",
 	            games: games
 	        });
-	    },
-	    gameCreated: function(game) {
-	        AppDispatcher.handleServerAction({
-	            type: "GAME_CREATED",
-	            game: game
-	        });   
-	    },
-	    gameEnded : function(game) {
-	        AppDispatcher.handleServerAction({
-	            type: "GAME_ENDED",
-	            game: game
-	        });
 	    }
-	};
+	  };
 
 /***/ },
 /* 33 */
@@ -9045,10 +9057,10 @@
 
 	"use strict";
 
-	var CSSProperty = __webpack_require__(106);
+	var CSSProperty = __webpack_require__(101);
 
-	var dangerousStyleValue = __webpack_require__(107);
-	var hyphenateStyleName = __webpack_require__(108);
+	var dangerousStyleValue = __webpack_require__(102);
+	var hyphenateStyleName = __webpack_require__(103);
 	var memoizeStringOnly = __webpack_require__(36);
 
 	var processStyleName = memoizeStringOnly(function(styleName) {
@@ -9202,12 +9214,12 @@
 	"use strict";
 
 	var EventConstants = __webpack_require__(37);
-	var EventPluginHub = __webpack_require__(101);
-	var EventPluginRegistry = __webpack_require__(102);
-	var ReactEventEmitterMixin = __webpack_require__(103);
-	var ViewportMetrics = __webpack_require__(104);
+	var EventPluginHub = __webpack_require__(104);
+	var EventPluginRegistry = __webpack_require__(105);
+	var ReactEventEmitterMixin = __webpack_require__(106);
+	var ViewportMetrics = __webpack_require__(107);
 
-	var isEventSupported = __webpack_require__(105);
+	var isEventSupported = __webpack_require__(108);
 	var merge = __webpack_require__(44);
 
 	/**
@@ -9842,13 +9854,13 @@
 	"use strict";
 
 	var EventConstants = __webpack_require__(37);
-	var EventPluginHub = __webpack_require__(101);
+	var EventPluginHub = __webpack_require__(104);
 	var EventPropagators = __webpack_require__(109);
 	var ExecutionEnvironment = __webpack_require__(31);
 	var ReactUpdates = __webpack_require__(42);
 	var SyntheticEvent = __webpack_require__(111);
 
-	var isEventSupported = __webpack_require__(105);
+	var isEventSupported = __webpack_require__(108);
 	var isTextInputElement = __webpack_require__(112);
 	var keyOf = __webpack_require__(60);
 
@@ -12195,7 +12207,7 @@
 	"use strict";
 
 	var DOMProperty = __webpack_require__(34);
-	var EventPluginHub = __webpack_require__(101);
+	var EventPluginHub = __webpack_require__(104);
 	var ReactComponent = __webpack_require__(14);
 	var ReactCompositeComponent = __webpack_require__(15);
 	var ReactDOM = __webpack_require__(19);
@@ -23651,6 +23663,254 @@
 /* 101 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/**
+	 * Copyright 2013-2014 Facebook, Inc.
+	 *
+	 * Licensed under the Apache License, Version 2.0 (the "License");
+	 * you may not use this file except in compliance with the License.
+	 * You may obtain a copy of the License at
+	 *
+	 * http://www.apache.org/licenses/LICENSE-2.0
+	 *
+	 * Unless required by applicable law or agreed to in writing, software
+	 * distributed under the License is distributed on an "AS IS" BASIS,
+	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 * See the License for the specific language governing permissions and
+	 * limitations under the License.
+	 *
+	 * @providesModule CSSProperty
+	 */
+
+	"use strict";
+
+	/**
+	 * CSS properties which accept numbers but are not in units of "px".
+	 */
+	var isUnitlessNumber = {
+	  columnCount: true,
+	  fillOpacity: true,
+	  flex: true,
+	  flexGrow: true,
+	  flexShrink: true,
+	  fontWeight: true,
+	  lineClamp: true,
+	  lineHeight: true,
+	  opacity: true,
+	  order: true,
+	  orphans: true,
+	  widows: true,
+	  zIndex: true,
+	  zoom: true
+	};
+
+	/**
+	 * @param {string} prefix vendor-specific prefix, eg: Webkit
+	 * @param {string} key style name, eg: transitionDuration
+	 * @return {string} style name prefixed with `prefix`, properly camelCased, eg:
+	 * WebkitTransitionDuration
+	 */
+	function prefixKey(prefix, key) {
+	  return prefix + key.charAt(0).toUpperCase() + key.substring(1);
+	}
+
+	/**
+	 * Support style names that may come passed in prefixed by adding permutations
+	 * of vendor prefixes.
+	 */
+	var prefixes = ['Webkit', 'ms', 'Moz', 'O'];
+
+	// Using Object.keys here, or else the vanilla for-in loop makes IE8 go into an
+	// infinite loop, because it iterates over the newly added props too.
+	Object.keys(isUnitlessNumber).forEach(function(prop) {
+	  prefixes.forEach(function(prefix) {
+	    isUnitlessNumber[prefixKey(prefix, prop)] = isUnitlessNumber[prop];
+	  });
+	});
+
+	/**
+	 * Most style properties can be unset by doing .style[prop] = '' but IE8
+	 * doesn't like doing that with shorthand properties so for the properties that
+	 * IE8 breaks on, which are listed here, we instead unset each of the
+	 * individual properties. See http://bugs.jquery.com/ticket/12385.
+	 * The 4-value 'clock' properties like margin, padding, border-width seem to
+	 * behave without any problems. Curiously, list-style works too without any
+	 * special prodding.
+	 */
+	var shorthandPropertyExpansions = {
+	  background: {
+	    backgroundImage: true,
+	    backgroundPosition: true,
+	    backgroundRepeat: true,
+	    backgroundColor: true
+	  },
+	  border: {
+	    borderWidth: true,
+	    borderStyle: true,
+	    borderColor: true
+	  },
+	  borderBottom: {
+	    borderBottomWidth: true,
+	    borderBottomStyle: true,
+	    borderBottomColor: true
+	  },
+	  borderLeft: {
+	    borderLeftWidth: true,
+	    borderLeftStyle: true,
+	    borderLeftColor: true
+	  },
+	  borderRight: {
+	    borderRightWidth: true,
+	    borderRightStyle: true,
+	    borderRightColor: true
+	  },
+	  borderTop: {
+	    borderTopWidth: true,
+	    borderTopStyle: true,
+	    borderTopColor: true
+	  },
+	  font: {
+	    fontStyle: true,
+	    fontVariant: true,
+	    fontWeight: true,
+	    fontSize: true,
+	    lineHeight: true,
+	    fontFamily: true
+	  }
+	};
+
+	var CSSProperty = {
+	  isUnitlessNumber: isUnitlessNumber,
+	  shorthandPropertyExpansions: shorthandPropertyExpansions
+	};
+
+	module.exports = CSSProperty;
+
+
+/***/ },
+/* 102 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2014 Facebook, Inc.
+	 *
+	 * Licensed under the Apache License, Version 2.0 (the "License");
+	 * you may not use this file except in compliance with the License.
+	 * You may obtain a copy of the License at
+	 *
+	 * http://www.apache.org/licenses/LICENSE-2.0
+	 *
+	 * Unless required by applicable law or agreed to in writing, software
+	 * distributed under the License is distributed on an "AS IS" BASIS,
+	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 * See the License for the specific language governing permissions and
+	 * limitations under the License.
+	 *
+	 * @providesModule dangerousStyleValue
+	 * @typechecks static-only
+	 */
+
+	"use strict";
+
+	var CSSProperty = __webpack_require__(101);
+
+	var isUnitlessNumber = CSSProperty.isUnitlessNumber;
+
+	/**
+	 * Convert a value into the proper css writable value. The style name `name`
+	 * should be logical (no hyphens), as specified
+	 * in `CSSProperty.isUnitlessNumber`.
+	 *
+	 * @param {string} name CSS property name such as `topMargin`.
+	 * @param {*} value CSS property value such as `10px`.
+	 * @return {string} Normalized style value with dimensions applied.
+	 */
+	function dangerousStyleValue(name, value) {
+	  // Note that we've removed escapeTextForBrowser() calls here since the
+	  // whole string will be escaped when the attribute is injected into
+	  // the markup. If you provide unsafe user data here they can inject
+	  // arbitrary CSS which may be problematic (I couldn't repro this):
+	  // https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet
+	  // http://www.thespanner.co.uk/2007/11/26/ultimate-xss-css-injection/
+	  // This is not an XSS hole but instead a potential CSS injection issue
+	  // which has lead to a greater discussion about how we're going to
+	  // trust URLs moving forward. See #2115901
+
+	  var isEmpty = value == null || typeof value === 'boolean' || value === '';
+	  if (isEmpty) {
+	    return '';
+	  }
+
+	  var isNonNumeric = isNaN(value);
+	  if (isNonNumeric || value === 0 ||
+	      isUnitlessNumber.hasOwnProperty(name) && isUnitlessNumber[name]) {
+	    return '' + value; // cast to string
+	  }
+
+	  if (typeof value === 'string') {
+	    value = value.trim();
+	  }
+	  return value + 'px';
+	}
+
+	module.exports = dangerousStyleValue;
+
+
+/***/ },
+/* 103 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2014 Facebook, Inc.
+	 *
+	 * Licensed under the Apache License, Version 2.0 (the "License");
+	 * you may not use this file except in compliance with the License.
+	 * You may obtain a copy of the License at
+	 *
+	 * http://www.apache.org/licenses/LICENSE-2.0
+	 *
+	 * Unless required by applicable law or agreed to in writing, software
+	 * distributed under the License is distributed on an "AS IS" BASIS,
+	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 * See the License for the specific language governing permissions and
+	 * limitations under the License.
+	 *
+	 * @providesModule hyphenateStyleName
+	 * @typechecks
+	 */
+
+	"use strict";
+
+	var hyphenate = __webpack_require__(143);
+
+	var msPattern = /^ms-/;
+
+	/**
+	 * Hyphenates a camelcased CSS property name, for example:
+	 *
+	 *   > hyphenate('backgroundColor')
+	 *   < "background-color"
+	 *   > hyphenate('MozTransition')
+	 *   < "-moz-transition"
+	 *   > hyphenate('msTransition')
+	 *   < "-ms-transition"
+	 *
+	 * As Modernizr suggests (http://modernizr.com/docs/#prefixed), an `ms` prefix
+	 * is converted to `-ms-`.
+	 *
+	 * @param {string} string
+	 * @return {string}
+	 */
+	function hyphenateStyleName(string) {
+	  return hyphenate(string).replace(msPattern, '-ms-');
+	}
+
+	module.exports = hyphenateStyleName;
+
+
+/***/ },
+/* 104 */
+/***/ function(module, exports, __webpack_require__) {
+
 	/* WEBPACK VAR INJECTION */(function(process) {/**
 	 * Copyright 2013-2014 Facebook, Inc.
 	 *
@@ -23671,13 +23931,13 @@
 
 	"use strict";
 
-	var EventPluginRegistry = __webpack_require__(102);
+	var EventPluginRegistry = __webpack_require__(105);
 	var EventPluginUtils = __webpack_require__(12);
 
-	var accumulate = __webpack_require__(143);
-	var forEachAccumulated = __webpack_require__(144);
+	var accumulate = __webpack_require__(144);
+	var forEachAccumulated = __webpack_require__(145);
 	var invariant = __webpack_require__(38);
-	var isEventSupported = __webpack_require__(105);
+	var isEventSupported = __webpack_require__(108);
 	var monitorCodeUse = __webpack_require__(53);
 
 	/**
@@ -23945,7 +24205,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(33)))
 
 /***/ },
-/* 102 */
+/* 105 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -24235,7 +24495,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(33)))
 
 /***/ },
-/* 103 */
+/* 106 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -24258,7 +24518,7 @@
 
 	"use strict";
 
-	var EventPluginHub = __webpack_require__(101);
+	var EventPluginHub = __webpack_require__(104);
 
 	function runEventQueueInBatch(events) {
 	  EventPluginHub.enqueueEvents(events);
@@ -24296,7 +24556,7 @@
 
 
 /***/ },
-/* 104 */
+/* 107 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -24339,7 +24599,7 @@
 
 
 /***/ },
-/* 105 */
+/* 108 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -24415,254 +24675,6 @@
 
 
 /***/ },
-/* 106 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2014 Facebook, Inc.
-	 *
-	 * Licensed under the Apache License, Version 2.0 (the "License");
-	 * you may not use this file except in compliance with the License.
-	 * You may obtain a copy of the License at
-	 *
-	 * http://www.apache.org/licenses/LICENSE-2.0
-	 *
-	 * Unless required by applicable law or agreed to in writing, software
-	 * distributed under the License is distributed on an "AS IS" BASIS,
-	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	 * See the License for the specific language governing permissions and
-	 * limitations under the License.
-	 *
-	 * @providesModule CSSProperty
-	 */
-
-	"use strict";
-
-	/**
-	 * CSS properties which accept numbers but are not in units of "px".
-	 */
-	var isUnitlessNumber = {
-	  columnCount: true,
-	  fillOpacity: true,
-	  flex: true,
-	  flexGrow: true,
-	  flexShrink: true,
-	  fontWeight: true,
-	  lineClamp: true,
-	  lineHeight: true,
-	  opacity: true,
-	  order: true,
-	  orphans: true,
-	  widows: true,
-	  zIndex: true,
-	  zoom: true
-	};
-
-	/**
-	 * @param {string} prefix vendor-specific prefix, eg: Webkit
-	 * @param {string} key style name, eg: transitionDuration
-	 * @return {string} style name prefixed with `prefix`, properly camelCased, eg:
-	 * WebkitTransitionDuration
-	 */
-	function prefixKey(prefix, key) {
-	  return prefix + key.charAt(0).toUpperCase() + key.substring(1);
-	}
-
-	/**
-	 * Support style names that may come passed in prefixed by adding permutations
-	 * of vendor prefixes.
-	 */
-	var prefixes = ['Webkit', 'ms', 'Moz', 'O'];
-
-	// Using Object.keys here, or else the vanilla for-in loop makes IE8 go into an
-	// infinite loop, because it iterates over the newly added props too.
-	Object.keys(isUnitlessNumber).forEach(function(prop) {
-	  prefixes.forEach(function(prefix) {
-	    isUnitlessNumber[prefixKey(prefix, prop)] = isUnitlessNumber[prop];
-	  });
-	});
-
-	/**
-	 * Most style properties can be unset by doing .style[prop] = '' but IE8
-	 * doesn't like doing that with shorthand properties so for the properties that
-	 * IE8 breaks on, which are listed here, we instead unset each of the
-	 * individual properties. See http://bugs.jquery.com/ticket/12385.
-	 * The 4-value 'clock' properties like margin, padding, border-width seem to
-	 * behave without any problems. Curiously, list-style works too without any
-	 * special prodding.
-	 */
-	var shorthandPropertyExpansions = {
-	  background: {
-	    backgroundImage: true,
-	    backgroundPosition: true,
-	    backgroundRepeat: true,
-	    backgroundColor: true
-	  },
-	  border: {
-	    borderWidth: true,
-	    borderStyle: true,
-	    borderColor: true
-	  },
-	  borderBottom: {
-	    borderBottomWidth: true,
-	    borderBottomStyle: true,
-	    borderBottomColor: true
-	  },
-	  borderLeft: {
-	    borderLeftWidth: true,
-	    borderLeftStyle: true,
-	    borderLeftColor: true
-	  },
-	  borderRight: {
-	    borderRightWidth: true,
-	    borderRightStyle: true,
-	    borderRightColor: true
-	  },
-	  borderTop: {
-	    borderTopWidth: true,
-	    borderTopStyle: true,
-	    borderTopColor: true
-	  },
-	  font: {
-	    fontStyle: true,
-	    fontVariant: true,
-	    fontWeight: true,
-	    fontSize: true,
-	    lineHeight: true,
-	    fontFamily: true
-	  }
-	};
-
-	var CSSProperty = {
-	  isUnitlessNumber: isUnitlessNumber,
-	  shorthandPropertyExpansions: shorthandPropertyExpansions
-	};
-
-	module.exports = CSSProperty;
-
-
-/***/ },
-/* 107 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2014 Facebook, Inc.
-	 *
-	 * Licensed under the Apache License, Version 2.0 (the "License");
-	 * you may not use this file except in compliance with the License.
-	 * You may obtain a copy of the License at
-	 *
-	 * http://www.apache.org/licenses/LICENSE-2.0
-	 *
-	 * Unless required by applicable law or agreed to in writing, software
-	 * distributed under the License is distributed on an "AS IS" BASIS,
-	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	 * See the License for the specific language governing permissions and
-	 * limitations under the License.
-	 *
-	 * @providesModule dangerousStyleValue
-	 * @typechecks static-only
-	 */
-
-	"use strict";
-
-	var CSSProperty = __webpack_require__(106);
-
-	var isUnitlessNumber = CSSProperty.isUnitlessNumber;
-
-	/**
-	 * Convert a value into the proper css writable value. The style name `name`
-	 * should be logical (no hyphens), as specified
-	 * in `CSSProperty.isUnitlessNumber`.
-	 *
-	 * @param {string} name CSS property name such as `topMargin`.
-	 * @param {*} value CSS property value such as `10px`.
-	 * @return {string} Normalized style value with dimensions applied.
-	 */
-	function dangerousStyleValue(name, value) {
-	  // Note that we've removed escapeTextForBrowser() calls here since the
-	  // whole string will be escaped when the attribute is injected into
-	  // the markup. If you provide unsafe user data here they can inject
-	  // arbitrary CSS which may be problematic (I couldn't repro this):
-	  // https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet
-	  // http://www.thespanner.co.uk/2007/11/26/ultimate-xss-css-injection/
-	  // This is not an XSS hole but instead a potential CSS injection issue
-	  // which has lead to a greater discussion about how we're going to
-	  // trust URLs moving forward. See #2115901
-
-	  var isEmpty = value == null || typeof value === 'boolean' || value === '';
-	  if (isEmpty) {
-	    return '';
-	  }
-
-	  var isNonNumeric = isNaN(value);
-	  if (isNonNumeric || value === 0 ||
-	      isUnitlessNumber.hasOwnProperty(name) && isUnitlessNumber[name]) {
-	    return '' + value; // cast to string
-	  }
-
-	  if (typeof value === 'string') {
-	    value = value.trim();
-	  }
-	  return value + 'px';
-	}
-
-	module.exports = dangerousStyleValue;
-
-
-/***/ },
-/* 108 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2014 Facebook, Inc.
-	 *
-	 * Licensed under the Apache License, Version 2.0 (the "License");
-	 * you may not use this file except in compliance with the License.
-	 * You may obtain a copy of the License at
-	 *
-	 * http://www.apache.org/licenses/LICENSE-2.0
-	 *
-	 * Unless required by applicable law or agreed to in writing, software
-	 * distributed under the License is distributed on an "AS IS" BASIS,
-	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	 * See the License for the specific language governing permissions and
-	 * limitations under the License.
-	 *
-	 * @providesModule hyphenateStyleName
-	 * @typechecks
-	 */
-
-	"use strict";
-
-	var hyphenate = __webpack_require__(145);
-
-	var msPattern = /^ms-/;
-
-	/**
-	 * Hyphenates a camelcased CSS property name, for example:
-	 *
-	 *   > hyphenate('backgroundColor')
-	 *   < "background-color"
-	 *   > hyphenate('MozTransition')
-	 *   < "-moz-transition"
-	 *   > hyphenate('msTransition')
-	 *   < "-ms-transition"
-	 *
-	 * As Modernizr suggests (http://modernizr.com/docs/#prefixed), an `ms` prefix
-	 * is converted to `-ms-`.
-	 *
-	 * @param {string} string
-	 * @return {string}
-	 */
-	function hyphenateStyleName(string) {
-	  return hyphenate(string).replace(msPattern, '-ms-');
-	}
-
-	module.exports = hyphenateStyleName;
-
-
-/***/ },
 /* 109 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -24687,10 +24699,10 @@
 	"use strict";
 
 	var EventConstants = __webpack_require__(37);
-	var EventPluginHub = __webpack_require__(101);
+	var EventPluginHub = __webpack_require__(104);
 
-	var accumulate = __webpack_require__(143);
-	var forEachAccumulated = __webpack_require__(144);
+	var accumulate = __webpack_require__(144);
+	var forEachAccumulated = __webpack_require__(145);
 
 	var PropagationPhases = EventConstants.PropagationPhases;
 	var getListener = EventPluginHub.getListener;
@@ -25373,9 +25385,9 @@
 	"use strict";
 
 	var SyntheticUIEvent = __webpack_require__(133);
-	var ViewportMetrics = __webpack_require__(104);
+	var ViewportMetrics = __webpack_require__(107);
 
-	var getEventModifierState = __webpack_require__(148);
+	var getEventModifierState = __webpack_require__(149);
 
 	/**
 	 * @interface MouseEvent
@@ -25469,7 +25481,7 @@
 	"use strict";
 
 	var CSSPropertyOperations = __webpack_require__(57);
-	var DOMChildrenOperations = __webpack_require__(149);
+	var DOMChildrenOperations = __webpack_require__(148);
 	var DOMPropertyOperations = __webpack_require__(11);
 	var ReactMount = __webpack_require__(23);
 	var ReactPerf = __webpack_require__(25);
@@ -25980,8 +25992,8 @@
 
 	var ReactBrowserEventEmitter = __webpack_require__(59);
 
-	var accumulate = __webpack_require__(143);
-	var forEachAccumulated = __webpack_require__(144);
+	var accumulate = __webpack_require__(144);
+	var forEachAccumulated = __webpack_require__(145);
 	var invariant = __webpack_require__(38);
 
 	function remove(event) {
@@ -26581,7 +26593,7 @@
 	var SyntheticUIEvent = __webpack_require__(133);
 
 	var getEventKey = __webpack_require__(150);
-	var getEventModifierState = __webpack_require__(148);
+	var getEventModifierState = __webpack_require__(149);
 
 	/**
 	 * @interface KeyboardEvent
@@ -26723,7 +26735,7 @@
 
 	var SyntheticUIEvent = __webpack_require__(133);
 
-	var getEventModifierState = __webpack_require__(148);
+	var getEventModifierState = __webpack_require__(149);
 
 	/**
 	 * @interface TouchEvent
@@ -27132,7 +27144,7 @@
 	 * @typechecks
 	 */
 
-	var performance = __webpack_require__(151);
+	var performance = __webpack_require__(152);
 
 	/**
 	 * Detect if we can use `window.performance.now()` and gracefully fallback to
@@ -27171,7 +27183,7 @@
 	 * @typechecks
 	 */
 
-	var isNode = __webpack_require__(152);
+	var isNode = __webpack_require__(151);
 
 	/**
 	 * @param {*} object The object to check.
@@ -29089,6 +29101,50 @@
 /* 143 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/**
+	 * Copyright 2013-2014 Facebook, Inc.
+	 *
+	 * Licensed under the Apache License, Version 2.0 (the "License");
+	 * you may not use this file except in compliance with the License.
+	 * You may obtain a copy of the License at
+	 *
+	 * http://www.apache.org/licenses/LICENSE-2.0
+	 *
+	 * Unless required by applicable law or agreed to in writing, software
+	 * distributed under the License is distributed on an "AS IS" BASIS,
+	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 * See the License for the specific language governing permissions and
+	 * limitations under the License.
+	 *
+	 * @providesModule hyphenate
+	 * @typechecks
+	 */
+
+	var _uppercasePattern = /([A-Z])/g;
+
+	/**
+	 * Hyphenates a camelcased string, for example:
+	 *
+	 *   > hyphenate('backgroundColor')
+	 *   < "background-color"
+	 *
+	 * For CSS style names, use `hyphenateStyleName` instead which works properly
+	 * with all vendor prefixes, including `ms`.
+	 *
+	 * @param {string} string
+	 * @return {string}
+	 */
+	function hyphenate(string) {
+	  return string.replace(_uppercasePattern, '-$1').toLowerCase();
+	}
+
+	module.exports = hyphenate;
+
+
+/***/ },
+/* 144 */
+/***/ function(module, exports, __webpack_require__) {
+
 	/* WEBPACK VAR INJECTION */(function(process) {/**
 	 * Copyright 2013-2014 Facebook, Inc.
 	 *
@@ -29147,7 +29203,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(33)))
 
 /***/ },
-/* 144 */
+/* 145 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -29186,50 +29242,6 @@
 	};
 
 	module.exports = forEachAccumulated;
-
-
-/***/ },
-/* 145 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2014 Facebook, Inc.
-	 *
-	 * Licensed under the Apache License, Version 2.0 (the "License");
-	 * you may not use this file except in compliance with the License.
-	 * You may obtain a copy of the License at
-	 *
-	 * http://www.apache.org/licenses/LICENSE-2.0
-	 *
-	 * Unless required by applicable law or agreed to in writing, software
-	 * distributed under the License is distributed on an "AS IS" BASIS,
-	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	 * See the License for the specific language governing permissions and
-	 * limitations under the License.
-	 *
-	 * @providesModule hyphenate
-	 * @typechecks
-	 */
-
-	var _uppercasePattern = /([A-Z])/g;
-
-	/**
-	 * Hyphenates a camelcased string, for example:
-	 *
-	 *   > hyphenate('backgroundColor')
-	 *   < "background-color"
-	 *
-	 * For CSS style names, use `hyphenateStyleName` instead which works properly
-	 * with all vendor prefixes, including `ms`.
-	 *
-	 * @param {string} string
-	 * @return {string}
-	 */
-	function hyphenate(string) {
-	  return string.replace(_uppercasePattern, '-$1').toLowerCase();
-	}
-
-	module.exports = hyphenate;
 
 
 /***/ },
@@ -29495,64 +29507,6 @@
 /* 148 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/**
-	 * Copyright 2013 Facebook, Inc.
-	 *
-	 * Licensed under the Apache License, Version 2.0 (the "License");
-	 * you may not use this file except in compliance with the License.
-	 * You may obtain a copy of the License at
-	 *
-	 * http://www.apache.org/licenses/LICENSE-2.0
-	 *
-	 * Unless required by applicable law or agreed to in writing, software
-	 * distributed under the License is distributed on an "AS IS" BASIS,
-	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	 * See the License for the specific language governing permissions and
-	 * limitations under the License.
-	 *
-	 * @providesModule getEventModifierState
-	 * @typechecks static-only
-	 */
-
-	"use strict";
-
-	/**
-	 * Translation from modifier key to the associated property in the event.
-	 * @see http://www.w3.org/TR/DOM-Level-3-Events/#keys-Modifiers
-	 */
-
-	var modifierKeyToProp = {
-	  'Alt': 'altKey',
-	  'Control': 'ctrlKey',
-	  'Meta': 'metaKey',
-	  'Shift': 'shiftKey'
-	};
-
-	// IE8 does not implement getModifierState so we simply map it to the only
-	// modifier keys exposed by the event itself, does not support Lock-keys.
-	// Currently, all major browsers except Chrome seems to support Lock-keys.
-	function modifierStateGetter(keyArg) {
-	  /*jshint validthis:true */
-	  var syntheticEvent = this;
-	  var nativeEvent = syntheticEvent.nativeEvent;
-	  if (nativeEvent.getModifierState) {
-	    return nativeEvent.getModifierState(keyArg);
-	  }
-	  var keyProp = modifierKeyToProp[keyArg];
-	  return keyProp ? !!nativeEvent[keyProp] : false;
-	}
-
-	function getEventModifierState(nativeEvent) {
-	  return modifierStateGetter;
-	}
-
-	module.exports = getEventModifierState;
-
-
-/***/ },
-/* 149 */
-/***/ function(module, exports, __webpack_require__) {
-
 	/* WEBPACK VAR INJECTION */(function(process) {/**
 	 * Copyright 2013-2014 Facebook, Inc.
 	 *
@@ -29735,6 +29689,64 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(33)))
 
 /***/ },
+/* 149 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013 Facebook, Inc.
+	 *
+	 * Licensed under the Apache License, Version 2.0 (the "License");
+	 * you may not use this file except in compliance with the License.
+	 * You may obtain a copy of the License at
+	 *
+	 * http://www.apache.org/licenses/LICENSE-2.0
+	 *
+	 * Unless required by applicable law or agreed to in writing, software
+	 * distributed under the License is distributed on an "AS IS" BASIS,
+	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 * See the License for the specific language governing permissions and
+	 * limitations under the License.
+	 *
+	 * @providesModule getEventModifierState
+	 * @typechecks static-only
+	 */
+
+	"use strict";
+
+	/**
+	 * Translation from modifier key to the associated property in the event.
+	 * @see http://www.w3.org/TR/DOM-Level-3-Events/#keys-Modifiers
+	 */
+
+	var modifierKeyToProp = {
+	  'Alt': 'altKey',
+	  'Control': 'ctrlKey',
+	  'Meta': 'metaKey',
+	  'Shift': 'shiftKey'
+	};
+
+	// IE8 does not implement getModifierState so we simply map it to the only
+	// modifier keys exposed by the event itself, does not support Lock-keys.
+	// Currently, all major browsers except Chrome seems to support Lock-keys.
+	function modifierStateGetter(keyArg) {
+	  /*jshint validthis:true */
+	  var syntheticEvent = this;
+	  var nativeEvent = syntheticEvent.nativeEvent;
+	  if (nativeEvent.getModifierState) {
+	    return nativeEvent.getModifierState(keyArg);
+	  }
+	  var keyProp = modifierKeyToProp[keyArg];
+	  return keyProp ? !!nativeEvent[keyProp] : false;
+	}
+
+	function getEventModifierState(nativeEvent) {
+	  return modifierStateGetter;
+	}
+
+	module.exports = getEventModifierState;
+
+
+/***/ },
 /* 150 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -29875,24 +29887,24 @@
 	 * See the License for the specific language governing permissions and
 	 * limitations under the License.
 	 *
-	 * @providesModule performance
+	 * @providesModule isNode
 	 * @typechecks
 	 */
 
-	"use strict";
-
-	var ExecutionEnvironment = __webpack_require__(31);
-
-	var performance;
-
-	if (ExecutionEnvironment.canUseDOM) {
-	  performance =
-	    window.performance ||
-	    window.msPerformance ||
-	    window.webkitPerformance;
+	/**
+	 * @param {*} object The object to check.
+	 * @return {boolean} Whether or not the object is a DOM node.
+	 */
+	function isNode(object) {
+	  return !!(object && (
+	    typeof Node === 'function' ? object instanceof Node :
+	      typeof object === 'object' &&
+	      typeof object.nodeType === 'number' &&
+	      typeof object.nodeName === 'string'
+	  ));
 	}
 
-	module.exports = performance || {};
+	module.exports = isNode;
 
 
 /***/ },
@@ -29914,24 +29926,24 @@
 	 * See the License for the specific language governing permissions and
 	 * limitations under the License.
 	 *
-	 * @providesModule isNode
+	 * @providesModule performance
 	 * @typechecks
 	 */
 
-	/**
-	 * @param {*} object The object to check.
-	 * @return {boolean} Whether or not the object is a DOM node.
-	 */
-	function isNode(object) {
-	  return !!(object && (
-	    typeof Node === 'function' ? object instanceof Node :
-	      typeof object === 'object' &&
-	      typeof object.nodeType === 'number' &&
-	      typeof object.nodeName === 'string'
-	  ));
+	"use strict";
+
+	var ExecutionEnvironment = __webpack_require__(31);
+
+	var performance;
+
+	if (ExecutionEnvironment.canUseDOM) {
+	  performance =
+	    window.performance ||
+	    window.msPerformance ||
+	    window.webkitPerformance;
 	}
 
-	module.exports = isNode;
+	module.exports = performance || {};
 
 
 /***/ },

@@ -31,7 +31,7 @@ module.exports = {
             }
         });
     },
-    createGame: function(command) {
+    createGame: function(command, cb) {
         $.ajax({
             url: url,
             dataType: 'json',
@@ -39,14 +39,14 @@ module.exports = {
             data: JSON.stringify(command),
             contentType: 'application/json; charset=utf-8',
             success: function(data, status, xhr) {
-                poll(xhr.getResponseHeader('Location'), 2000, function(game) { GameServerActionCreators.gameCreated(game); });
+                poll(xhr.getResponseHeader('Location'), 2000, cb);
             },
             error: function(xhr, status, err) {
                 console.error(url, status, err.toString());
             }
         });
     },
-    makeMove: function (command) {
+    makeMove: function (command, cb) {
         $.ajax({
             url: url + "available/" + command.gameId + "/",
             dataType: 'json',
@@ -54,7 +54,7 @@ module.exports = {
             data: JSON.stringify(command),
             contentType: 'application/json; charset=utf-8',
             success: function (data, status, xhr) {
-                poll(xhr.getResponseHeader('Location'), 2000, function (game) { GameServerActionCreators.gameEnded(game); });
+                poll(xhr.getResponseHeader('Location'), 2000, cb);
             },
             error: function (xhr, status, err) {
                 console.error(url, status, err.toString());
