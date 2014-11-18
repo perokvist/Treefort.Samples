@@ -39,7 +39,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="Treefort">
-      <HintPath>..\RPS.Game.Domain\packages\Treefort.0.2.11.22348\lib\net45\Treefort.dll</HintPath>
+      <HintPath>..\RPS.Game.Domain\packages\Treefort.0.3.1-beta\lib\net45\Treefort.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

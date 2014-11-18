@@ -4,8 +4,6 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using Autofac;
 using Autofac.Integration.WebApi;
-using Microsoft.Owin;
-using Microsoft.Owin.Extensions;
 using Microsoft.Owin.FileSystems;
 using Microsoft.Owin.StaticFiles;
 using Owin;
@@ -17,7 +15,6 @@ using Treefort.Infrastructure;
 using Treefort.Commanding;
 using Treefort.Read;
 using CacheCow.Server;
-using CacheCow.Common;
 
 
 namespace RPS.Api
@@ -55,7 +52,7 @@ namespace RPS.Api
                 command => ApplicationService.UpdateAsync<Game.Domain.Game, GameState>(
                     state => new Game.Domain.Game(state), eventStore, command, game => game.Handle(command)));
 
-            var bus = new ApplicationServer(commandDispatcher.Dispatch, new ConsoleLogger());
+            var bus = new CommandBusAction(commandDispatcher.Dispatch);
 
             var cb = new ContainerBuilder();
             cb.RegisterInstance(bus).AsImplementedInterfaces();

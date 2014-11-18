@@ -94,9 +94,9 @@
       <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.4.0.30506.0\lib\net40\System.Web.Http.WebHost.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml" />
-    <Reference Include="Treefort, Version=0.3.0.17408, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Treefort, Version=0.3.1.29894, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Treefort.0.3.0-beta\lib\net45\Treefort.dll</HintPath>
+      <HintPath>..\packages\Treefort.0.3.1-beta\lib\net45\Treefort.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
