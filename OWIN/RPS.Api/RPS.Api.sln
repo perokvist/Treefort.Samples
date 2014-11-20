@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30723.0
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RPS.Api", "RPS.Api\RPS.Api.csproj", "{50A59B34-821C-4570-927C-BE07DA3CF529}"
 EndProject
@@ -12,6 +12,13 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RPS.Web", "RPS.Web\RPS.Web.csproj", "{CA09D365-C23B-49F0-BC5F-84D2E960082E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RPS.Api.IISHost", "RPS.Api.IISHost\RPS.Api.IISHost.csproj", "{56A78AF4-7B7A-4E02-8C09-F391B044D82E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{9A84DFE9-9025-4816-B450-4C6D0C1435EA}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\packages.config = .nuget\packages.config
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RPS.Web.Jobs", "RPS.Web.Jobs\RPS.Web.Jobs.csproj", "{0FD9415A-5BCE-4691-AF96-37A556A171B7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +46,10 @@ Global
 		{56A78AF4-7B7A-4E02-8C09-F391B044D82E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{56A78AF4-7B7A-4E02-8C09-F391B044D82E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{56A78AF4-7B7A-4E02-8C09-F391B044D82E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0FD9415A-5BCE-4691-AF96-37A556A171B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0FD9415A-5BCE-4691-AF96-37A556A171B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0FD9415A-5BCE-4691-AF96-37A556A171B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0FD9415A-5BCE-4691-AF96-37A556A171B7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

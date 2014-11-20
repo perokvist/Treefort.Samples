@@ -1,3 +1,4 @@
+ApplicationInsights.config
 *.nupkg
 *.bat
 

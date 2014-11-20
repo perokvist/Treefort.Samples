@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using RPS.Game.ReadModel;
 using Treefort.Commanding;
@@ -26,7 +27,7 @@ namespace RPS.Api.Controllers
 
         [HttpPost]
         [Route("")]
-        public HttpResponseMessage Create(Game.ReadModel.CreateGameCommand input)
+        public async Task<HttpResponseMessage> Create(Game.ReadModel.CreateGameCommand input)
         {
             var gameId = Guid.NewGuid();
 
@@ -38,7 +39,8 @@ namespace RPS.Api.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Invalid move");
 
             var command = new RPS.Game.Domain.CreateGameCommand(gameId, input.PlayerName, input.GameName, move);
-            _commandBus.SendAsync(command); //Note - fire and forget with app server 
+            
+            await _commandBus.SendAsync(command); 
 
             return Request.CreateResponse(HttpStatusCode.Accepted )
                 .Tap(message => message.Headers.Location = new Uri(Url.Link(RouteConfiguration.AvailableGamesRoute, new { id = gameId })));

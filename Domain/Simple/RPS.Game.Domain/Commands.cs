@@ -1,10 +1,11 @@
 ﻿using System;
 using Treefort.Commanding;
+using Treefort.Messaging;
 
 namespace RPS.Game.Domain
 {
 
-    public interface IGameCommand : ICommand
+    public interface IGameCommand : ICommand, ISessionMessage
     {}
 
     public class CreateGameCommand : IGameCommand
@@ -28,6 +29,11 @@ namespace RPS.Game.Domain
         public Guid AggregateId { get; private set; }
 
         public Guid CorrelationId { get; private set; }
+
+        public string SessionId
+        {
+            get { return AggregateId.ToString(); }
+        }
     }
 
     public class MakeMoveCommand : IGameCommand
@@ -48,6 +54,11 @@ namespace RPS.Game.Domain
         
         public Guid AggregateId { get; private set; }
         public Guid CorrelationId { get; private set; }
+
+        public string SessionId
+        {
+            get { return AggregateId.ToString(); }
+        }
     }
 
 }
